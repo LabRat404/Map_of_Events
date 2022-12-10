@@ -1,17 +1,40 @@
 import React from 'react';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 
-export default function Login() {
+async function loginUser(credentials) {
+  return fetch('http://localhost:8080/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(credentials)
+  })
+  .then(data => data.json())
+}
+
+export default function Login({ setToken }) {
+  const [username, setUserName] = useState();
+  const [password, setPassword] = useState();
+  const handleSubmit = async e => {
+    e.preventDefault();
+    const token = await loginUser({
+      username,
+      password
+    });
+    setToken(token);
+  }
   return(
     <div className="Auth-form-container">
-      <form className="Auth-form">
+      <form className="Auth-form" onSubmit={handleSubmit}>
         <div className="Auth-form-content">
           <h3 className="Auth-form-title">Sign In</h3>
           <div className="form-group mt-3">
-            <label>Email address</label>
+            <label>Username</label>
             <input
-              type="email"
               className="form-control mt-1"
-              placeholder="Enter email"
+              placeholder="Enter username"
+              onChange={e => setUserName(e.target.value)}
             />
           </div>
           <div className="form-group mt-3">
@@ -20,6 +43,7 @@ export default function Login() {
               type="password"
               className="form-control mt-1"
               placeholder="Enter password"
+              onChange={e => setPassword(e.target.value)}
             />
           </div>
           <div className="d-grid gap-2 mt-3">
@@ -34,4 +58,7 @@ export default function Login() {
       </form>
     </div>
   )
+}
+Login.propTypes = {
+  setToken: PropTypes.func.isRequired
 }
