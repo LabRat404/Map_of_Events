@@ -35,9 +35,22 @@ app.post("/login-user", async (req, res) => {
     }
     if (await bcrypt.compare(password, user.password)) {
       const token = jwt.sign({ email: user.username }, JWT_SECRET);
-  
-      if (res.status(201)) {
-        return res.json({ status: "ok", data: token });
+      if (res.status(200)) {
+        if (username == "admin") {
+          return res.json({ 
+            status: "ok", 
+            data: token, 
+            username: username,
+            adminFlag: true
+          });
+        } else {
+          return res.json({ 
+            status: "ok", 
+            data: token, 
+            username: username,
+            adminFlag: false 
+          });
+        }
       } else {
         return res.json({ error: "error" });
       }
