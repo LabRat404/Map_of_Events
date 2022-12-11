@@ -1,64 +1,68 @@
-import React from 'react';
-import { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
 
-// async function loginUser(credentials) {
-//   return fetch('http://localhost:3000/api/login', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json'
-//     },
-//     body: JSON.stringify(credentials)
-//   })
-//   .then(data => data.json())
-// }
-
-export default function Login({ setToken }) {
-  const [username, setUserName] = useState();
-  const [password, setPassword] = useState();
-  const handleSubmit = async e => {
-    e.preventDefault();
-    const token = await loginUser({
-      username,
-      password
-    });
-    setToken(token);
+export default class Login extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: "",
+      password: "",
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
-  return(
-    <div className="Auth-form-container">
-      <form className="Auth-form" onSubmit={handleSubmit}>
-        <div className="Auth-form-content">
-          <h3 className="Auth-form-title">Sign In</h3>
-          <div className="form-group mt-3">
-            <label>Username</label>
-            <input
-              className="form-control mt-1"
-              placeholder="Enter username"
-              onChange={e => setUserName(e.target.value)}
-            />
-          </div>
-          <div className="form-group mt-3">
-            <label>Password</label>
-            <input
-              type="password"
-              className="form-control mt-1"
-              placeholder="Enter password"
-              onChange={e => setPassword(e.target.value)}
-            />
-          </div>
-          <div className="d-grid gap-2 mt-3">
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
-          </div>
-          <p className="forgot-password text-right mt-2">
-            Forgot <a href="#">password?</a>
-          </p>
+  handleSubmit(e) {
+    e.preventDefault();
+    const { username, password } = this.state;
+    console.log(username, password);
+    fetch("http://localhost:5000/login-user", {
+      method: "POST",
+      crossDomain: true,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status == "ok") {
+          alert("login successful");
+          window.localStorage.setItem("token", data.data);
+          window.location.href = "./Dashboard";
+        }
+      });
+  }
+  render() {
+    return (
+      <form className="form-control" onSubmit={this.handleSubmit}>
+        <h3>Sign In</h3>
+        <div className="mb-3">
+          <label>Username</label>
+          <input
+            className="form-control"
+            placeholder="Enter username"
+            onChange={(e) => this.setState({ username: e.target.value })}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label>Password</label>
+          <input
+            type="password"
+            className="form-control"
+            placeholder="Enter password"
+            onChange={(e) => this.setState({ password: e.target.value })}
+          />
+        </div>
+        <div className="d-grid">
+          <button type="submit" className="btn btn-primary">
+            Submit
+          </button>
         </div>
       </form>
-    </div>
-  )
-}
-Login.propTypes = {
-  setToken: PropTypes.func.isRequired
+    );
+  }
 }

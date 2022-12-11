@@ -14,12 +14,17 @@ function App() {
     <div className="wrapper">
       <h1>Application</h1>
       <BrowserRouter>
-        <Routes>
-          <Route path="/dashboard" element={<Dashboard />}>
-          </Route>
-          <Route path="/preferences" element={<Preferences />}>
-          </Route>
-        </Routes>
+      <div className="App">
+        <div className="auth-wrapper">
+          <div className="auth-inner">
+            <Routes>
+              <Route exact path="/" element={<Login />} />
+              <Route path="/Dashboard" element={<Dashboard />} />
+              <Route path="/Preference" element={<Preferences />} />
+            </Routes>
+          </div>
+        </div>
+      </div>
       </BrowserRouter>
     </div>
   );
