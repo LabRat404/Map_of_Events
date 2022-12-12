@@ -10,7 +10,7 @@
 # admin account
 # username = admin; password = admin
 
-### User actions
+### User actions:
 - [ ] List all locations in a table as links to single locations, and allow sorting of the table with i) number of events at venue, or ii) min and max traffic speed of road
 - [x] ~~Show all locations in a map, with links to each single location [ Suggested APIs: Google Maps, MapBox ]~~
 - [ ] Search for locations which contain keywords in the name which will result in a table of location results
