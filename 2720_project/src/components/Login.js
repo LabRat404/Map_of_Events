@@ -17,6 +17,7 @@ export default class Login extends Component {
     console.log(username, password);
     fetch("http://localhost:5000/login-user", {
       method: "POST",
+      redirect: 'follow',
       crossDomain: true,
       headers: {
         "Content-Type": "application/json",
