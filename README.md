@@ -4,6 +4,12 @@
 # cd server
 # node ./index.js --> the app will run at localhost:5000
 
+# normal user account
+# username = test; password = 123456
+
+# admin account
+# username = admin; password = admin
+
 ### User actions
 - [ ] List all locations in a table as links to single locations, and allow sorting of the table with i) number of events at venue, or ii) min and max traffic speed of road
 - [x] ~~Show all locations in a map, with links to each single location [ Suggested APIs: Google Maps, MapBox ]~~
