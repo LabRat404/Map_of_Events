@@ -19,9 +19,14 @@
 
 - normal user account
   username = test; password = 123456
+  username = user1; password = 123456
 
 - admin account
   username = admin; password = admin
+
+- Pages:
+  Dashboard for users
+  Preference for admin
 
 ### User actions:
 - [ ] List all locations in a table as links to single locations, and allow sorting of the table with i) number of events at venue, or ii) min and max traffic speed of road
