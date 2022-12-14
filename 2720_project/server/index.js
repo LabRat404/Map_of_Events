@@ -58,6 +58,37 @@ app.post("/login-user", async (req, res) => {
     res.json({ status: "error", error: "Invalid Password" });
 });
 
+app.get("/getusers", async (req, res) => {
+
+
+  const user = await User.find( { "who" : "user" } )
+  if (!user) {
+    return res.json({ error: "No user found" });
+  }else{
+    return res.json(user);
+  }
+
+});
+app.post("/addusers", async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
+  if (!user) {
+    User.create({
+      username: user2,
+      password: "1234",
+      who: "user",
+      __v: 0
+    })
+  }else{
+    return res.json({ error: "User was created" });
+  }
+
+
+  res.json({ status: "error", error: "No users" });
+});
+
+
+
 app.listen(3001, () => {
     console.log("Server Started");
 });

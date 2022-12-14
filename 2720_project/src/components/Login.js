@@ -8,7 +8,6 @@ function Login (props) {
   const handleSubmit = (e) => {
 
     e.preventDefault();
-    console.log(username, password);
     fetch("http://localhost:3001/login-user", {
       method: "POST",
       redirect: 'follow',
