@@ -1,14 +1,14 @@
 # LCSD Cultural Programmes Map of Events
 
-# to start server
-# cd server
-# node ./index.js --> the app will run at localhost:5000
+- to start server
+  cd server
+  node ./index.js --> the app will run at localhost:5000
 
-# normal user account
-# username = test; password = 123456
+- normal user account
+  username = test; password = 123456
 
-# admin account
-# username = admin; password = admin
+- admin account
+  username = admin; password = admin
 
 ### User actions:
 - [ ] List all locations in a table as links to single locations, and allow sorting of the table with i) number of events at venue, or ii) min and max traffic speed of road
