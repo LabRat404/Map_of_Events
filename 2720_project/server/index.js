@@ -58,8 +58,7 @@ app.post("/login-user", async (req, res) => {
     res.json({ status: "error", error: "Invalid Password" });
 });
 
-app.get("/getusers", async (req, res) => {
-
+app.get("/getUsers", async (req, res) => {
 
   const user = await User.find( { "who" : "user" } )
   if (!user) {
@@ -69,12 +68,31 @@ app.get("/getusers", async (req, res) => {
   }
 
 });
-app.post("/addusers", async (req, res) => {
+
+
+app.post("/addUsers", async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
   if (!user) {
     User.create({
-      username: user2,
+      username: "user2",
+      password: "1234",
+      who: "user",
+      __v: 0
+    })
+  }else{
+    return res.json({ error: "User was created" });
+  }
+  res.json({ status: "error", error: "No users" });
+});
+
+
+app.put("/updateUsers", async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
+  if (!user) {
+    User.create({
+      username: "user2",
       password: "1234",
       who: "user",
       __v: 0
@@ -87,6 +105,15 @@ app.post("/addusers", async (req, res) => {
   res.json({ status: "error", error: "No users" });
 });
 
+app.delete("/deleteUsers", async (req, res) => {
+  const { username } = req.body;
+  const user = await User.findOne({ username });
+
+  if (!user) 
+    res.json({ status: "error", error: "No users" });
+ 
+
+});
 
 
 app.listen(3001, () => {
