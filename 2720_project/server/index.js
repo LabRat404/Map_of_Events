@@ -58,6 +58,6 @@ app.post("/login-user", async (req, res) => {
     res.json({ status: "error", error: "Invalid Password" });
 });
 
-app.listen(5000, () => {
+app.listen(3001, () => {
     console.log("Server Started");
 });

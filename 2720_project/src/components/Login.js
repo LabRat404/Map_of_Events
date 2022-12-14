@@ -9,7 +9,7 @@ function Login (props) {
 
     e.preventDefault();
     console.log(username, password);
-    fetch("http://localhost:5000/login-user", {
+    fetch("http://localhost:3001/login-user", {
       method: "POST",
       redirect: 'follow',
       crossDomain: true,

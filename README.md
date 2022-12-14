@@ -1,8 +1,21 @@
 # LCSD Cultural Programmes Map of Events
 
-- to start server
+# 1. Start Server
   cd server
-  node ./index.js --> the app will run at localhost:5000
+  node index.js --> Runs at 3001 for Server (5000 is replaced (taken by Universal Plug and Play (UPnP), Port 5000 TCP and Apple AirPlay))
+
+# 2. Start React App
+ Start a new Terminal  
+ cd .. (back to 2720_project / pwd: /Users/xxx/Desktop/2720_project/2720_project)
+ npm start  --> Runs at 3000 for Server
+
+# Debug (If cannot find module)
+  Run following cmds in a terminal:
+  rm -rf node_modules
+  npm install
+
+  or
+  npm install --save missing_module_name
 
 - normal user account
   username = test; password = 123456
