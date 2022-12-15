@@ -19,12 +19,13 @@ export default function Preferences() {
     .then((res) => res.json())
     .then((data) => {
         console.log(data);
-      
+
     });
   
   }
   
   function updateUser(uname){
+   
     console.log(uname+"username");
     fetch("http://localhost:3001/updateUsers", {
       method: "PUT",
@@ -36,12 +37,12 @@ export default function Preferences() {
         // "Access-Control-Allow-Origin": "*",
       },
    
-     body:JSON.stringify({username: document.getElementById(uname+"username").value, password: document.getElementById(uname+"pw").value})
+     body:JSON.stringify({old: uname, username: document.getElementById(uname+"username").value, password: document.getElementById(uname+"pw").value})
     })
     .then((res) => res.json())
     .then((data) => {
         console.log(data);
-      
+     
     });
   
   }
@@ -88,8 +89,8 @@ export default function Preferences() {
       setdata1(data);
       setclick(false);
       for(let i = 0; i<data1.length; i++){
-        document.getElementById(data1[i].username+"username").value = data1[i].username;
-        // document.getElementById(data1[i].password).value = data1[i].password;
+        document.getElementById(data1[i].username).value = data1[i].username;
+        document.getElementById(data1[i].username+"p").value = data1[i].password;
       }
     })
   }, [click, data1])
@@ -109,6 +110,9 @@ export default function Preferences() {
           <br></br>
         {data1.map((_,index) => 
    <>
+          <input id={data1[index].username}></input>
+          <input id={data1[index].username+"p"}></input>
+          <br></br>
           <input id={data1[index].username+"username"}></input>
           <input id={data1[index].username+"pw"}></input>
           <button onClick={(e)=>{ e.preventDefault(); updateUser(data1[index].username); setclick(true);}}>Update</button>  

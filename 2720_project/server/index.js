@@ -78,11 +78,12 @@ app.post("/addUsers", async (req, res) => {
   console.log(username);
   const user = await User.findOne({"username" : username});
   if (user == null) {
-    User.create({
+    const a = User.create({
       username: username,
       password: password,
       admin: false,
     })
+
   }else{
     return res.json({ error: "User was created" });
   }
@@ -91,9 +92,10 @@ app.post("/addUsers", async (req, res) => {
 
 
 app.put("/updateUsers", async (req, res) => {
-
+  console.log(req.body.username);
+  console.log(req.body.old);
   await User
-  .findOne({"username" : req.body.username})
+  .findOne({"username" : req.body.old})
   .exec((e, results)=>{
     if (results == null) 
     res.json({ status: "error", error: "No users" });
