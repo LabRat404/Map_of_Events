@@ -105,9 +105,13 @@ export default function Preferences() {
           </div>
         </header>
       <form>
-          <input value="Username"></input>
-          <input value="Password"></input>
+          <input value="Old Username"></input>
+          <input value="Old Password"></input>
           <br></br>
+          <input value="New Username"></input>
+          <input value="New Password"></input>
+          <p>----------------------------------------------------------------------------------</p>
+
         {data1.map((_,index) => 
    <>
           <input id={data1[index].username}></input>
@@ -115,6 +119,7 @@ export default function Preferences() {
           <br></br>
           <input id={data1[index].username+"username"}></input>
           <input id={data1[index].username+"pw"}></input>
+          <br></br>
           <button onClick={(e)=>{ e.preventDefault(); updateUser(data1[index].username); setclick(true);}}>Update</button>  
           <button onClick={(e)=>{ e.preventDefault(); delUser(data1[index].username); setclick(true);}}>Delete</button>  
           <br></br>
@@ -129,6 +134,7 @@ export default function Preferences() {
           <h5>Add a user</h5>
           <input id="uname"></input>
           <input id="pw"></input>
+          <br></br>
           <button id="add" onClick={(e)=>{ e.preventDefault(); addUser(); setclick(true);}}>Add User</button>  
       </form>
 
