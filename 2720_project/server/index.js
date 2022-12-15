@@ -2,8 +2,6 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 app.use(express.json());
-const cors = require("cors");
-app.use(cors());
 const bcrypt = require("bcryptjs");
 app.use(express.urlencoded({ extended: false }));
 
@@ -19,16 +17,17 @@ mongoose
   .connect(mongoUrl)
   .then(() => {
     console.log("Connected to database");
-  })
-  .catch((e) => console.log(e));
-
+    const cors = require('cors'); 
+    app.use(cors({credentials:true, origin: true}));
+  const bodyParser = require('body-parser');
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.json()); 
 require("./user");
 
 const User = mongoose.model("User");
-
 app.post("/login-user", async (req, res) => {
     const { username, password } = req.body;
-  
+    
     const user = await User.findOne({ username });
     if (!user) {
       return res.json({ error: "User Not found" });
@@ -60,7 +59,7 @@ app.post("/login-user", async (req, res) => {
 
 app.get("/getUsers", async (req, res) => {
 
-  const user = await User.find( { "who" : "user" } )
+  const user = await User.find( { "admin" : false } )
   if (!user) {
     return res.json({ error: "No user found" });
   }else{
@@ -105,17 +104,25 @@ app.put("/updateUsers", async (req, res) => {
   res.json({ status: "error", error: "No users" });
 });
 
-app.delete("/deleteUsers", async (req, res) => {
-  const { username } = req.body;
-  const user = await User.findOne({ username });
-
-  if (!user) 
+app.delete("/deleteUsers", (req, res) => {
+  const username = req.body['name'];
+  const user = User.findOne({"username" : username});
+  if (user == null) 
     res.json({ status: "error", error: "No users" });
- 
-
+    else{
+    user.remove();
+    res.send("Deleted",200);
+  }
 });
 
 
 app.listen(3001, () => {
     console.log("Server Started");
 });
+
+
+
+
+  })
+  .catch((e) => console.log(e));
+  
