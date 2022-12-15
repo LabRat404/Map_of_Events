@@ -31,7 +31,7 @@ function Dashboard(){
         <header>        
           <div className="d-flex align-items-center bg-info mb-3">
             <div id = "userName" className="p-2"><b>User Name</b></div>
-            <div className="ms-auto p-2"><button type="submit" className="btn btn-primary"><i class="bi bi-person"> </i>Logout</button></div>
+            <div className="ms-auto p-2"><button type="submit" className="btn btn-primary"><i className="bi bi-person"> </i>Logout</button></div>
           </div>
         </header>
 
@@ -43,7 +43,7 @@ function Dashboard(){
               <input id = "searchText" type="text" placeholder="Search for locations"></input>
               </div>
               <div className="p-2">
-                <button className="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                <button className="btn btn-primary" type="submit"><i className="bi bi-search"></i></button>
               </div>
               <div className="ms-auto p-2">
                 <button className="btn btn-primary" type="submit">Show favorite locations</button>
@@ -56,7 +56,7 @@ function Dashboard(){
                 <div className="d-flex justify-content-between align-items-center bg-secondary">
                   <div className="p-2"></div>
                   <div className="p-2">Venues</div>
-                  <div className="p-2"><button onClick={()=>updateSort(!sort)} type="submit" className="btn btn-primary"><i class="bi bi-sort-down"></i></button></div>
+                  <div className="p-2"><button onClick={()=>updateSort(!sort)} type="submit" className="btn btn-primary"><i className="bi bi-sort-down"></i></button></div>
                 </div>
                 <div id = "tableList" className="list-group mb-3">
                   {sortEvent(sort)}
@@ -73,7 +73,7 @@ function Dashboard(){
       
         </div>
         <footer>
-        <i class="bi bi-clock"> </i>Last updated on <span id = "lastUpdatedTime">2022-12-14</span>.
+        <i className="bi bi-clock"> </i>Last updated on <span id = "lastUpdatedTime">2022-12-14</span>.
           </footer>
       </>
     );
@@ -103,8 +103,8 @@ function List(props){
 
     <div className='d-flex flex-row align-items-center'>
       <div onClick={(e) => handleClick(e)} className="list-group-item list-group-item-action p-4 border-bottom border-dark">
-        <div><i class="bi bi-geo-alt"> </i>{name}</div>
-        <div><i class="bi bi-calendar-event"> </i>{quota + " events"}</div>
+        <div><i className="bi bi-geo-alt"> </i>{name}</div>
+        <div><i className="bi bi-calendar-event"> </i>{quota + " events"}</div>
       </div>
       {/* fav icon star */}
       <div onClick={()=>addFav()} className='ms-auto p-2'>
