@@ -7,7 +7,7 @@ function Dashboard(){
     return(
       <>
         <header>        
-          <div className="d-flex bg-info mb-3">
+          <div className="d-flex align-items-center bg-info mb-3">
             <div id = "userName" className="p-2">User Name</div>
             <div className="ms-auto p-2"><button type="submit" className="btn btn-primary">Log out</button></div>
           </div>
@@ -16,14 +16,23 @@ function Dashboard(){
         <div className="container">
 
           <main>
-            <div className="mb-3">
-              <input id = "searchText" className="col-10" type="text" placeholder="Search for locations"></input>
-              <button className="col-2 rounded-pill" type="submit">Search</button>
+            <div className="mb-3  d-flex flex-row justify-content-center align-items-center">
+              <div>
+              <input id = "searchText" type="text" placeholder="Search for locations"></input>
+              </div>
+              <div className="p-2">
+                <button className="btn btn-primary" type="submit">Search</button>
+              </div>
             </div>
-            <div id = "mainContent" className="row mb-3">
+
+            <div id = "mainContent" className="d-flex flex-row row mb-3">
               
               <div id = "table" className="col-5 bg-warning">
-                test table area
+                <div className="d-flex justify-content-between align-items-center bg-secondary">
+                  <div className="p-2">Venues</div>
+                  <div className="p-2">Number of Events</div>
+                  <div className="p-2"><button type="submit" className="btn btn-primary">Sort</button></div>
+                </div>
                 <div className="list-group mb-3">
                   {venues.map((name,index) => <List name={name} i = {index} key={index}/>)}
                 </div>
