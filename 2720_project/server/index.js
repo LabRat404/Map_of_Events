@@ -17,13 +17,13 @@ mongoose
   .connect(mongoUrl)
   .then(() => {
     console.log("Connected to database");
-    const cors = require('cors'); 
+     
+require("./user");
+const cors = require('cors'); 
     app.use(cors({credentials:true, origin: true}));
   const bodyParser = require('body-parser');
   app.use(bodyParser.urlencoded({ extended: false }));
-  app.use(bodyParser.json()); 
-require("./user");
-
+  app.use(bodyParser.json());
 const User = mongoose.model("User");
 app.post("/login-user", async (req, res) => {
     const { username, password } = req.body;
@@ -76,8 +76,6 @@ app.post("/addUsers", async (req, res) => {
     User.create({
       username: "user2",
       password: "1234",
-      who: "user",
-      __v: 0
     })
   }else{
     return res.json({ error: "User was created" });
@@ -93,8 +91,7 @@ app.put("/updateUsers", async (req, res) => {
     User.create({
       username: "user2",
       password: "1234",
-      who: "user",
-      __v: 0
+  
     })
   }else{
     return res.json({ error: "User was created" });
@@ -104,9 +101,9 @@ app.put("/updateUsers", async (req, res) => {
   res.json({ status: "error", error: "No users" });
 });
 
-app.delete("/deleteUsers", (req, res) => {
+app.delete("/deleteUsers", async(req, res) => {
   const username = req.body['name'];
-  const user = User.findOne({"username" : username});
+  const user = await User.findOne({"username" : username});
   if (user == null) 
     res.json({ status: "error", error: "No users" });
     else{
