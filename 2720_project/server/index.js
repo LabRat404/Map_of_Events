@@ -20,7 +20,9 @@ mongoose
      
 require("./user");
 const cors = require('cors'); 
-    app.use(cors({credentials:true, origin: true}));
+app.use(cors({
+  origin: '*'
+}));
   const bodyParser = require('body-parser');
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
@@ -70,12 +72,16 @@ app.get("/getUsers", async (req, res) => {
 
 
 app.post("/addUsers", async (req, res) => {
-  const { username, password } = req.body;
-  const user = await User.findOne({ username });
-  if (!user) {
+
+  const username = req.body['username'];
+  const password = req.body['password'];
+  console.log(username);
+  const user = await User.findOne({"username" : username});
+  if (user == null) {
     User.create({
-      username: "user2",
-      password: "1234",
+      username: username,
+      password: password,
+      admin: false,
     })
   }else{
     return res.json({ error: "User was created" });
@@ -85,21 +91,19 @@ app.post("/addUsers", async (req, res) => {
 
 
 app.put("/updateUsers", async (req, res) => {
-  const { username, password } = req.body;
-  const user = await User.findOne({ username });
-  if (!user) {
-    User.create({
-      username: "user2",
-      password: "1234",
-  
-    })
-  }else{
-    return res.json({ error: "User was created" });
+
+  await User
+  .findOne({"username" : req.body.username})
+  .exec((e, results)=>{
+    if (results == null) 
+    res.json({ status: "error", error: "No users" });
+   else{
+    results.username = req.body.username;
+    results.password = req.body.password;
+    results.save();
   }
 
-
-  res.json({ status: "error", error: "No users" });
-});
+})});
 
 app.delete("/deleteUsers", async(req, res) => {
   const username = req.body['name'];
