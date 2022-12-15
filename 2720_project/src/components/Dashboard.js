@@ -3,7 +3,18 @@ import React, { Component, useState } from 'react';
 let venues = ["v1","v2","v3","v4","v5","v6","v7","v8","v9","v10"];
 
 function Dashboard(){
- 
+  const [sort, updateSort] = useState(false);
+
+  function sortEvent(sort){
+    // console.log(sort);
+    if(sort){
+      return "sort";
+    }
+    else{
+      return venues.map((name,index) => <List name={name} i = {index} key={index}/>);
+    }
+  }
+
     return(
       <>
         <header>        
@@ -31,10 +42,11 @@ function Dashboard(){
                 <div className="d-flex justify-content-between align-items-center bg-secondary">
                   <div className="p-2">Venues</div>
                   <div className="p-2">Number of Events</div>
-                  <div className="p-2"><button type="submit" className="btn btn-primary">Sort</button></div>
+                  <div className="p-2"><button onClick={()=>updateSort(!sort)} type="submit" className="btn btn-primary">Sort</button></div>
                 </div>
-                <div className="list-group mb-3">
-                  {venues.map((name,index) => <List name={name} i = {index} key={index}/>)}
+                <div id = "tableList" className="list-group mb-3">
+                  {sortEvent(sort)}
+                  {/* {venues.map((name,index) => <List name={name} i = {index} key={index}/>)} */}
                 </div>
               </div>
 
@@ -44,11 +56,10 @@ function Dashboard(){
             </div>
           </main>
       
-
-          <footer>
+        </div>
+        <footer>
             Last updated on <span id = "lastUpdatedTime">2022-12-14</span>.
           </footer>
-        </div>
       </>
     );
 
@@ -56,17 +67,25 @@ function Dashboard(){
 
 function List(props){
   const [selected, updateSelected] = useState(-1);
+  const [favorite, updateFavorite] = useState(false);
   let i = props.i; //index
   let name = props.name;
   // console.log(name);
   
+  // clicked link
   function handleClick(e){
 
   }
 
+  //added to favourite
+  function addFav(e){
+    updateFavorite(!favorite);
+    console.log(name + " has been added to favoruite!");
+  }
+
   return(
 
-    <div className='d-flex'>
+    <div className='d-flex flex-row align-items-center'>
       <div onClick={(e) => handleClick(e)} className="list-group-item list-group-item-action">
       {/* <a href="#" className="list-group-item list-group-item-action" aria-current="true">
         {venues[i] + "<br>" + "\nwith quota 2"}
@@ -75,7 +94,7 @@ function List(props){
         <div>number of events is: </div>
       </div>
       {/* fav icon star */}
-      <div><button>add</button></div>
+      <div className='p-2 pl-2'><button type="submit" className="btn btn-danger" onClick={()=>addFav()}>+</button></div>
     </div>
   );
 }
