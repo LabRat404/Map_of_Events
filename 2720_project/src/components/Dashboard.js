@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 let venues = [{venuesName: "Tai Po Public Library", quota: 100},
@@ -14,6 +14,67 @@ let venues = [{venuesName: "Tai Po Public Library", quota: 100},
             ];
 
 function Dashboard(){
+  const [userName, setUserName] = useState();
+
+  //get user name
+  useEffect(()=>{
+    const parseJwt = (token) => {
+      try {
+        return JSON.parse(atob(token.split('.')[1]));
+      } catch (e) {
+        return null;
+      }
+    };
+
+    let token = window.localStorage.getItem('token');
+    // console.log(token);
+    let decodedToken = parseJwt(token);
+    console.log(decodedToken);
+    setUserName(decodedToken.email);
+  });
+
+
+  function logout(){
+
+  }
+
+  function showFav(){
+
+  }
+
+  return(
+    <>
+      <header>        
+        <div className="d-flex align-items-center bg-info mb-3">
+          <div id = "userName" className="p-2"><b>{userName}</b></div>
+          <div className="ms-auto p-2"><button id="logoutBtn" onClick={()=>logout()} type="submit" className="btn btn-primary"><i className="bi bi-person"> </i>Logout</button></div>
+        </div>
+      </header>
+
+      <div className="mb-3  d-flex flex-row justify-content-center align-items-center">
+        <div className="p-2">
+        <input id = "searchText" type="text" placeholder="Search for locations"></input>
+        </div>
+        <div className="p-2">
+          <button id="searchBtn" className="btn btn-primary" type="submit"><i className="bi bi-search"></i></button>
+        </div>
+        <div className="p-2">
+          <button id="showFavBtn" onClick={()=>showFav()} className="btn btn-primary" type="submit">Show favorite locations</button>
+        </div>
+      </div>
+
+      {/* middle main content */}
+      <Tablelist/>
+
+      <footer className="bg-purple">
+        <i className="bi bi-clock"> </i>Last updated on <span id = "lastUpdatedTime">2022-12-14</span>.
+      </footer>
+    </>
+  );
+}
+
+// User action 1
+function Tablelist(props){
   const [sort, updateSort] = useState(false);
 
   function sortEvent(sort){
@@ -26,58 +87,30 @@ function Dashboard(){
     }
   }
 
-    return(
-      <>
-        <header>        
-          <div className="d-flex align-items-center bg-info mb-3">
-            <div id = "userName" className="p-2"><b>User Name</b></div>
-            <div className="ms-auto p-2"><button type="submit" className="btn btn-primary"><i className="bi bi-person"> </i>Logout</button></div>
+  return(
+    <div className="container">
+      <main>
+        <div id = "mainContent" className="d-flex flex-row row mb-3">
+          
+          <div id = "table" className="col-5 bg-warning">
+            <div className="d-flex justify-content-between align-items-center bg-secondary">
+              <div className="p-2"></div>
+              <div className="p-2">Venues</div>
+              <div className="p-2"><button onClick={()=>updateSort(!sort)} type="submit" className="btn btn-primary"><i className="bi bi-sort-down"></i></button></div>
+            </div>
+            <div id = "tableList" className="list-group mb-3">
+              {sortEvent(sort)}
+            </div>
           </div>
-        </header>
 
-        <div className="container">
-
-          <main>
-            <div className="mb-3  d-flex flex-row justify-content-center align-items-center">
-              <div className="p-2">
-              <input id = "searchText" type="text" placeholder="Search for locations"></input>
-              </div>
-              <div className="p-2">
-                <button className="btn btn-primary" type="submit"><i className="bi bi-search"></i></button>
-              </div>
-              <div className="ms-auto p-2">
-                <button className="btn btn-primary" type="submit">Show favorite locations</button>
-              </div>
-            </div>
-
-            <div id = "mainContent" className="d-flex flex-row row mb-3">
-              
-              <div id = "table" className="col-5 bg-warning">
-                <div className="d-flex justify-content-between align-items-center bg-secondary">
-                  <div className="p-2"></div>
-                  <div className="p-2">Venues</div>
-                  <div className="p-2"><button onClick={()=>updateSort(!sort)} type="submit" className="btn btn-primary"><i className="bi bi-sort-down"></i></button></div>
-                </div>
-                <div id = "tableList" className="list-group mb-3">
-                  {sortEvent(sort)}
-                  {/* {venues.map((name,index) => <List name={name} i = {index} key={index}/>)} */}
-                </div>
-              </div>
-
-              <div id = "content" className="col-7 bg-success">
-                test content area(details info/ comment section?)
-              </div>
-              
-            </div>
-          </main>
-      
+          <div id = "sideContent" className="col-7 bg-success">
+            test content area(details info/ comment section?)
+          </div>
+          
         </div>
-        <footer>
-        <i className="bi bi-clock"> </i>Last updated on <span id = "lastUpdatedTime">2022-12-14</span>.
-          </footer>
-      </>
-    );
-
+      </main>
+    </div>
+  );
 }
 
 function List(props){
