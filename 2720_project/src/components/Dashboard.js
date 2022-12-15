@@ -1,4 +1,5 @@
 import React, { Component, useState } from 'react';
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 let venues = ["v1","v2","v3","v4","v5","v6","v7","v8","v9","v10"];
 
@@ -94,7 +95,7 @@ function List(props){
         <div>number of events is: </div>
       </div>
       {/* fav icon star */}
-      <div className='p-2 pl-2'><button type="submit" className="btn btn-danger" onClick={()=>addFav()}>+</button></div>
+      <div className='p-2'><button type="submit" className="btn btn-danger" onClick={()=>addFav()}><i class="bi bi-star"></i></button></div>
     </div>
   );
 }
