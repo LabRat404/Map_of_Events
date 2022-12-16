@@ -80,7 +80,7 @@ mongoose
         console.log(username);
         const a = User.create({
           username: username,
-          password: await bcrypt.hash(password, 1),
+          password: await bcrypt.hash(password, 10),
           // password: password,
           adminFlag: false,
 

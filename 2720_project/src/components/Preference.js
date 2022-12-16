@@ -94,25 +94,33 @@ export default function Preferences() {
     .then((data) => {
       setdata1(data);
       setclick(false);
+      document.getElementById("OldU").style.backgroundColor = "#CCCCCC";
+      document.getElementById("OldPw").style.backgroundColor = "#CCCCCC";
       for(let i = 0; i<data1.length; i++){
         document.getElementById(data1[i].username).value = data1[i].username;
+        document.getElementById(data1[i].username).style.backgroundColor = "#CCCCCC";
         document.getElementById(data1[i].username+"p").value = data1[i].password;
+        document.getElementById(data1[i].username+"p").style.backgroundColor = "#CCCCCC";
       }
     })
   }, [click, data1])
   
     return(
- 
+    
     <main>
       <header>        
           <div className="d-flex align-items-center bg-info mb-3">
             <div id = "userName" className="p-2">Admin Panel</div>
-            <div className="ms-auto p-2"><button type="submit" className="btn btn-primary" onClick={()=>{Logout(); setclick(true);}}>Log out</button></div>
+            <div className="ms-auto p-2"><button type="submit" className="btn btn-primary" onClick={()=>{Logout(); setclick(true);}}>Log out <i class="bi bi-forward"></i></button></div>
           </div>
         </header>
-      <form>
-          <input value="Old Username"></input>
-          <input value="Old Password"></input>
+        <div class="container border border-info border-4">
+          <br></br>
+          
+      <form >
+        
+          <input id="OldU"value="Old Username"></input>
+          <input id="OldPw"value="Old Password"></input>
           <br></br>
           <input value="New Username"></input>
           <input value="New Password"></input>
@@ -120,14 +128,14 @@ export default function Preferences() {
 
         {data1.map((_,index) => 
    <>
-          <input id={data1[index].username}readOnly></input>
-          <input type="text" id={data1[index].username+"p"}readOnly></input>
+          <input id={data1[index].username} readOnly></input>
+          <input type="text" id={data1[index].username+"p"} readOnly></input>
           <br></br>
           <input placeholder="New Username" id={data1[index].username+"username"} required></input>
           <input placeholder="New Password" id={data1[index].username+"pw"}></input>
           <br></br>
-          <button className="btn btn-success"onClick={(e)=>{ e.preventDefault(); updateUser(data1[index].username); setclick(true);}}>Update</button>  
-          <button className="btn btn-danger" onClick={(e)=>{ e.preventDefault(); delUser(data1[index].username); setclick(true);}}>Delete</button>  
+          <button className="btn btn-success"onClick={(e)=>{ e.preventDefault(); updateUser(data1[index].username); setclick(true);}}><i class="bi bi-pencil-square"></i> Update</button>  
+          <button className="btn btn-danger" onClick={(e)=>{ e.preventDefault(); delUser(data1[index].username); setclick(true);}}><i class="bi bi-trash"></i> Delete</button>  
           <br></br>
           <br></br>
         
@@ -142,9 +150,12 @@ export default function Preferences() {
           <input placeholder="Username" id="uname"></input>
           <input placeholder="Password" id="pw"></input>
           <br></br>
-          <br></br>
-          <button id="add" className="btn btn-primary" onClick={(e)=>{ e.preventDefault(); addUser(); setclick(true);}}><i className="bi bi-plus"></i>Add User</button>  
+          
+          <button id="add" className="btn btn-primary" onClick={(e)=>{ e.preventDefault(); addUser(); setclick(true);}}><i className="bi bi-plus"></i> Add User</button>  
+      
       </form>
+      <br></br>
+      </div>
 
     </main>
     
