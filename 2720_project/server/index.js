@@ -120,6 +120,11 @@ app.put("/updateEvent", async (req, res) => {
     return event.update(req, res);
 })
 
+/* Only 10 venues are stored in DB */
+app.get("/getAllVenues", async (req, res) => {
+  return venue.findAll(req, res);
+})
+
 app.post("/getVenue", async (req, res) => {
   return venue.find(req, res);
 })

@@ -19,6 +19,15 @@ module.exports.update = async function (req, res) { }
 
 const Venue = mongoose.model('Venue', VenueSchema);
 
+module.exports.findAll = async function (req, res) {
+    try {
+        const venues = await Venue.find()
+        res.json(venues)
+    } catch (e) {
+        return res.json({err: e})
+    }
+}
+
 module.exports.find = async function (req, res) {
     const e = req.body;
     const venue = await Venue.findOne({ venueid: e.venueid });
