@@ -45,7 +45,7 @@ export default function Preferences() {
         if(data!=null){
           document.getElementById(data+"username").value = '';
           document.getElementById(data+"pw").value = "";
-       
+          
         }
           
      

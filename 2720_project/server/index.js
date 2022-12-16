@@ -64,7 +64,7 @@ mongoose
     });
 
     app.get("/getUsers", async (req, res) => {
-      const user = await User.find({ "admin": false })
+      const user = await User.find({ "adminFlag": false })
       if (!user) {
         return res.json({ error: "No user found" });
       } else {
@@ -80,23 +80,26 @@ mongoose
         console.log(username);
         const a = User.create({
           username: username,
-          password: password,
-          admin: false,
+          password: await bcrypt.hash(password, 1),
+          // password: password,
+          adminFlag: false,
+
         })
         res.json("hi");
       }
     });
 
     app.put("/updateUsers", async (req, res) => {
-      await User
+      User
         .findOne({ "username": req.body.old })
-        .exec((e, results) => {
+        .exec(async (e, results) => {
           if (results == null)
             res.json({ status: "error", error: "No users" });
           else {
             results.username = req.body.username;
-            results.password = req.body.password;
-            results.admin = false;
+            results.password = await bcrypt.hash(req.body.password, 10);
+            // results.password = req.body.password;
+            results.adminFlag = false;
             results.save();
             res.json(req.body.old);
           }
