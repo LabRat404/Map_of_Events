@@ -1,4 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
+import { BrowserRouter, Navigate, Route, Routes, useNavigate,Link, Outlet } from 'react-router-dom';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { toBeEmpty } from '@testing-library/jest-dom/dist/matchers';
 
@@ -91,6 +92,7 @@ function Dashboard(){
 
 
       {/* middle main content */}
+      {/* <Outlet /> */}
       {!clickedFav && <Tablelist content={search}/> }
       {clickedFav && <Favourite user = {userName}/>}
       {/* <Container clickedFav = {clickedFav}/> */}
@@ -126,8 +128,8 @@ function Favourite(props){
   }
 
   return(
-    <div className="container">
-      <div id = "favList" className="bg-danger p-5 border">
+    <div className="container row bg-warning">
+      <div id = "favList" className="col-5 bg-danger border">
         <div className="d-flex justify-content-between align-items-center bg-secondary">
           <div className="p-2"></div>
           <div className="p-2">Venues</div>
@@ -136,6 +138,9 @@ function Favourite(props){
         <div id = "tableList" className="list-group mb-3">
           {sortEvent(sort)}
         </div>
+      </div>
+      <div id = "details" className="col-7 list-group mb-3">
+        <Outlet />
       </div>
     </div>
   );
@@ -313,10 +318,13 @@ function ViewFavList(props){
   return(
     <div>
     {favorite &&  <div className='d-flex flex-row align-items-center'>
-      <div onClick={(e) => handleClick(e)} className="list-group-item list-group-item-action p-4 border-bottom border-dark">
-        <div><i className="bi bi-geo-alt"> </i>{name}</div>
-        <div><i className="bi bi-calendar-event"> </i>{quota + " events"}</div>
-      </div>
+      <Link to ={`fav/${name}`}>
+      {/* <Link to ={`${name}`}> */}
+        <div className="list-group-item list-group-item-action p-4 border-bottom border-dark">
+          <div><i className="bi bi-geo-alt"> </i>{name}</div>
+          <div><i className="bi bi-calendar-event"> </i>{quota + " events"}</div>
+        </div>
+      </Link>
       {/* fav icon star */}
       <div onClick={()=>addFav()} className='ms-auto p-2'>
         <div className='btn'>
