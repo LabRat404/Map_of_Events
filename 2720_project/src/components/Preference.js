@@ -3,10 +3,10 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import React, { Component, useState, useEffect } from "react";
 export default function Preferences() {
  const [data1, setdata1] = useState([{"username": "loading"}]);
- const [click, setclick] = useState(false)
-
+ const [click, setclick] = useState(false);
+ const hostname = "localhost";
   function addUser(){
-    fetch("http://localhost:3001/addUsers", {
+    fetch("http://"+hostname+":3001/addUsers", {
       method: "POST",
       //mode: "no-cors",
       // crossDomain: true,
@@ -29,7 +29,7 @@ export default function Preferences() {
   }
   
   function updateUser(uname){
-    fetch("http://localhost:3001/updateUsers", {
+    fetch("http://"+hostname+":3001/updateUsers", {
       method: "PUT",
       // crossDomain: true,
       headers: {
@@ -55,7 +55,7 @@ export default function Preferences() {
   
   function delUser(username){
 
-    fetch("http://localhost:3001/deleteUsers", {
+    fetch("http://"+hostname+":3001/deleteUsers", {
       method: "DELETE",
       // crossDomain: true,
 
@@ -81,7 +81,7 @@ export default function Preferences() {
   }  
   
   useEffect(()=>{
-    fetch("http://localhost:3001/getUsers", {
+    fetch("http://"+hostname+":3001/getUsers", {
       method: "GET",
       // crossDomain: true,
       headers: {
@@ -101,6 +101,22 @@ export default function Preferences() {
         document.getElementById(data1[i].username).style.backgroundColor = "#CCCCCC";
         document.getElementById(data1[i].username+"p").value = data1[i].password;
         document.getElementById(data1[i].username+"p").style.backgroundColor = "#CCCCCC";
+      }
+      for(let i = 0; i<data1.length; i++){
+        console.log(document.getElementById(data1[i].username+"username").value);
+        if( document.getElementById(data1[i].username+"username").value !="" && document.getElementById(data1[i].username+"pw").value !=""){
+          
+          document.getElementById(data1[i].username+"up").classList.remove('disabled');
+        }else{
+          document.getElementById(data1[i].username+"up").classList.add('disabled');
+        }
+      }
+
+      if( document.getElementById("uname").value !="" && document.getElementById("pw").value !=""){
+          
+        document.getElementById("add").classList.remove('disabled');
+      }else{
+        document.getElementById("add").classList.add('disabled');
       }
     })
   }, [click, data1])
@@ -134,7 +150,7 @@ export default function Preferences() {
           <input placeholder="New Username" id={data1[index].username+"username"} required></input>
           <input placeholder="New Password" id={data1[index].username+"pw"}></input>
           <br></br>
-          <button className="btn btn-success"onClick={(e)=>{ e.preventDefault(); updateUser(data1[index].username); setclick(true);}}><i class="bi bi-pencil-square"></i> Update</button>  
+          <button id = {data1[index].username + "up"} className="btn btn-success"onClick={(e)=>{ e.preventDefault(); updateUser(data1[index].username); setclick(true);}}><i class="bi bi-pencil-square"></i> Update</button>  
           <button className="btn btn-danger" onClick={(e)=>{ e.preventDefault(); delUser(data1[index].username); setclick(true);}}><i class="bi bi-trash"></i> Delete</button>  
           <br></br>
           <br></br>
