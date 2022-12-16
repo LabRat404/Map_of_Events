@@ -1,6 +1,7 @@
 import React, { Component, useState, useEffect } from 'react';
 import "bootstrap-icons/font/bootstrap-icons.css";
 
+let user;
 let venues = [{venuesName: "Tai Po Public Library", quota: 100},
               {venuesName: "Sha Tin Town Hall (Cultural Activities Hall)", quota: 50},
               {venuesName: "Fu Shan Public Library", quota: 30},
@@ -13,6 +14,7 @@ let venues = [{venuesName: "Tai Po Public Library", quota: 100},
               {venuesName: "Fanling Public Library", quota: 300}
             ];
 let sortedVenues =[];
+let favLists =  [];
 
 function Dashboard(){
   const [userName, setUserName] = useState();
@@ -31,8 +33,26 @@ function Dashboard(){
     let token = window.localStorage.getItem('token');
     // console.log(token);
     let decodedToken = parseJwt(token);
-    console.log(decodedToken);
+    // console.log(decodedToken);
     setUserName(decodedToken.email);
+    user = userName;
+    // console.log(user);
+    // window.localStorage.removeItem('user2');
+    if(userName != undefined){
+      let userFavList = window.localStorage.getItem(userName);
+      if(userFavList == null){ //no such user
+        console.log("new user, empty fav list");
+        window.localStorage.setItem(userName, JSON.stringify([]));
+        // window.localStorage.removeItem('testuser');
+        // console.log(favLists);
+      }
+      else{//hv records
+        favLists = JSON.parse(userFavList);
+        // console.log(favLists.length);
+        // console.log(favLists);
+        console.log("old user, hv list");
+      }
+    }
   });
 
 
@@ -67,7 +87,7 @@ function Dashboard(){
 
       {/* middle main content */}
       {!clickedFav && <Tablelist/> }
-      {clickedFav && <Favourite/>}
+      {clickedFav && <Favourite user = {userName}/>}
       {/* <Container clickedFav = {clickedFav}/> */}
 
       <footer className="bg-purple">
@@ -172,7 +192,21 @@ function List(props){
   //added to favourite
   function addFav(){
     updateFavorite(!favorite);
-    // changeFav();
+
+    let objIndexInFavList = favLists.map(e => e.venuesName).indexOf(venuesObj.venuesName);
+    // console.log(objIndexInFavList);
+    // console.log(favLists);
+    if(objIndexInFavList == -1){ //no such venue in fav lists
+      favLists.push(venuesObj);
+      console.log(favLists);
+      window.localStorage.setItem(user, JSON.stringify(favLists)); //update fav in local store
+      
+    }
+    else{ //hv venue, delete it
+      favLists.splice(objIndexInFavList,1);
+      console.log(favLists);
+      window.localStorage.setItem(user, JSON.stringify(favLists)); //update fav in local store
+    }
   }
 
   return(
