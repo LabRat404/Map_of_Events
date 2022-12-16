@@ -39,7 +39,7 @@ mongoose
         return res.json({ error: "User Not found" });
       }
       if (await bcrypt.compare(password, user.password)) {
-        const token = jwt.sign({ email: user.username }, JWT_SECRET);
+        const token = jwt.sign({ username: user.username }, JWT_SECRET);
         if (res.status(200)) {
           if (username == "admin") {
             return res.json({
