@@ -98,16 +98,37 @@ function Dashboard(){
 }
 
 function Favourite(props){
+  const [sort, updateSort] = useState(false);
+  const [choosedVenues, updateChoosedVenues] = useState(venues[0]); // selected venues from list, default = 1st venue
+  const [venuesIndex, updateVenuesIndex] = useState(0); // selected venues index from list
+
+  //function pass to child to update selected venues
+  function selectedVenues(index, v){ 
+    console.log(v);
+    updateVenuesIndex(index);
+    updateChoosedVenues(v);
+  }
+
+  function sortEvent(sort){
+    // console.log(sort);
+    if(sort){
+      return venues.map((obj,index) => <List venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>);
+    }
+    else{
+      return favLists.map((obj,index) => <List venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>);
+    }
+  }
+
   return(
     <div className="container">
       <div id = "favList" className="bg-danger p-5 border">
         <div className="d-flex justify-content-between align-items-center bg-secondary">
           <div className="p-2"></div>
           <div className="p-2">Venues</div>
-          <div className="p-2"><button  type="submit" className="btn btn-primary"><i className="bi bi-sort-down"></i></button></div>
+          <div className="p-2"><button onClick={()=>updateSort(!sort)} type="submit" className="btn btn-primary"><i className="bi bi-sort-down"></i></button></div>
         </div>
         <div id = "tableList" className="list-group mb-3">
-          {venues.map((obj,index) => <List venuesObj={obj} i = {index} key={index}/>)}
+          {sortEvent(sort)}
         </div>
       </div>
     </div>
