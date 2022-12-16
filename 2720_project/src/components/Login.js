@@ -1,5 +1,6 @@
 import React, { Component, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import fetchLSCD from '../hooks/Fetch.js'
 
 function Login (props) {
   const [username, setUsername] = useState();
@@ -26,6 +27,7 @@ function Login (props) {
       .then((data) => {
         if (data.status == "ok") {
           alert("login successful");
+          fetchLSCD();
           window.localStorage.setItem("token", data.data);
           window.localStorage.setItem("admin", data.adminFlag);
           if (window.localStorage.getItem("token")) {
