@@ -1,3 +1,9 @@
+/**
+ * Fetch data from LCSD website and upload to Mongo. 
+ * Use default export to fetch all (events and venues). 
+ * Returns Update Timestamp.
+ */
+
 const EVENTS_URL = "https%3A%2F%2Fwww.lcsd.gov.hk%2Fdatagovhk%2Fevent%2Fevents.xml";
 const DATE_URL = "https%3A%2F%2Fwww.lcsd.gov.hk%2Fdatagovhk%2Fevent%2FeventDates.xml";
 const VENUE_URL = "https%3A%2F%2Fwww.lcsd.gov.hk%2Fdatagovhk%2Fevent%2Fvenues.xml"
@@ -5,8 +11,8 @@ const VENUE_URL = "https%3A%2F%2Fwww.lcsd.gov.hk%2Fdatagovhk%2Fevent%2Fvenues.xm
 async function fetchVenues(start, end) {
     /* Returns a dictionary containing all venues, e.g.
         { 
-            8263 : {venuec: '英皇戲院尖沙咀iSQUARE', venuee: 'Emperor Cinemas iSQUARE', latitude: '', longitude: ''}, ### might have no latlon ###
-            3110031 : {venuec: '北區大會堂 (演奏廳)', venuee: 'North District Town Hall (Auditorium)', latitude: '22.501639', longitude: '114.128911'}
+            58: {venuee: 'City Hall Public Library', latitude: '', longitude: ''}
+            3110031 : {venuee: 'North District Town Hall (Auditorium)', latitude: '22.501639', longitude: '114.128911'}
         }
     */
     const timestamp = await fetch(`https://api.data.gov.hk/v1/historical-archive/list-file-versions?url=${VENUE_URL}&start=${start}&end=${end}`)
@@ -32,14 +38,16 @@ async function fetchVenues(start, end) {
             // console.log(dict[58])
             return dict
         })
-    return res
+    return {
+        data: res,
+        timestamp: timestamp
+    }
 }
 
 async function fetchEvents(start, end) {
     /* Returns a list containing all events, e.g.
         [
-            {id: 144378, titlec: '《女人就是女人》─ 歐洲女神、美國烈女', titlee: '"A Woman Is A Woman"- Fest of Belles and Queens: Actresses European and Hollywood', venueid: 75010017, descc: '高達第一部彩色闊銀幕電影，開場就大字報地「廣播」導演的創作意圖：色彩、聲音、音樂、法國喜劇、歌劇與情…\n11/12 (日) 11:30am 香港電影資料館電影院\n設映後談 | 講者歐嘉麗 | 粵語主講', …},
-            {id: 144417, titlec: '《列車女賊》─ 歐洲女神、美國烈女', titlee: '"Boxcar Bertha"- Fest of Belles and Queens: Actresses European and Hollywood', venueid: 8263, descc: '馬田史高西斯成名之前也拍過B級片！拍竣第一部獨立長片但仍未製作一鳴驚人的《窮街陋巷》 （Mean S…。要回溯馬田史高西斯邁向大師的歷程，這是不能或缺的文本。\n\n設映後談 | 講者歐嘉麗 | 粵語主講', …},
+            {eventid: 144378, titlee: '"A Woman Is A Woman"- Fest of Belles and Queens: Actresses European and Hollywood', venueid: 75010017, desce: 'Five years after…And God Created Woman came A Woma…hive\nPost-screening Talk in Cantonese by Sonia Au', presenterorge: 'Presented by Leisure and Cultural Services Department', …}
         ]
     */
     const timestamp = await fetch(`https://api.data.gov.hk/v1/historical-archive/list-file-versions?url=${EVENTS_URL}&start=${start}&end=${end}`)
@@ -69,49 +77,20 @@ async function fetchEvents(start, end) {
             // console.log(list[0])
             return list
         })
-    return res
+    return {
+        data: res,
+        timestamp: timestamp
+    }
 }
 
-async function uploadVenues(venues) {
-    // venues.forEach((venue) => {
-    //     fetch(`${process.env.REACT_APP_SERVER_URL}/upload/venues`, {
-    //         method: "POST",
-    //         headers: new Headers({
-    //             "Content-Type": 'application/json',
-    //         }),
-    //         body: JSON.stringify({
-    //             venueid: loc.locationId,
-    //             eventList: loc.eventList
-    //         })
-    //     })
-    //         .then((res) => res.json())
-    //         .then((obj) => {
-    //             if (obj.err)
-    //                 console.log(obj.err);
-    //             else
-    //                 console.log(obj.msg);
-    //         })
-    // })
-    // veneuid: { type: Number, required: true, unique: true },
-    // venuee: String,
-    // longitude: Number,
-    // latitude: Number,
-    // events: [{ type: Schema.Types.ObjectId, ref: 'Event' }],
-    // comments: [{ 
-    //     username: { type: Schema.Types.ObjectId, ref: 'User' }, 
-    //     body: String,
-    //     date: Date,
-    // }]
-}
-
-async function uploadEvents(events) {
-    events.forEach((event) => {
-        fetch('http://localhost:3001/updateEvent', {
+async function updateVenues(venues) {
+    venues.forEach((item) => {
+        fetch('http://localhost:3001/updateVenue', {
             method: "PUT",
             headers: {
                 "Content-Type": 'application/json',
             },
-            body: JSON.stringify(event)
+            body: JSON.stringify(item)
         })
             .then((res) => res.json())
             .then((obj) => {
@@ -119,7 +98,27 @@ async function uploadEvents(events) {
                     console.log(obj.err);
             })
     })
-    console.log("Update Finished")
+}
+
+/**
+ * TO-DO: currently create MANY API calls (# of events).
+ * See if possible to batch upload in one call?
+ */
+async function updateEvents(events) {
+    events.forEach((item) => {
+        fetch('http://localhost:3001/updateEvent', {
+            method: "PUT",
+            headers: {
+                "Content-Type": 'application/json',
+            },
+            body: JSON.stringify(item)
+        })
+            .then((res) => res.json(item))
+            .then((obj) => {
+                if (obj.err)
+                    console.log(obj.err);
+            })
+    })
 }
 
 function formatDate(d) {
@@ -135,6 +134,33 @@ function formatDate(d) {
     return [year, month, day].join('');
 }
 
+function processVenues(venues, events) {
+    let event_lists = {};
+    for (let e of events) {
+        if (!event_lists[e.venueid])
+            event_lists[e.venueid] = []
+
+        event_lists[e.venueid].push(e.eventid)
+    }
+
+    let venues_id_sorted = Object.keys(event_lists).sort(function (a, b) {
+        return event_lists[b].length - event_lists[a].length
+    })
+
+    let top_venues = [];
+    for (let venueid of venues_id_sorted) {
+        let venue = venues[venueid]
+        venue['venueid'] = venueid
+        venue['events'] = event_lists[venueid]
+
+        top_venues.push(venue)
+        if (Object.keys(top_venues).length >= 10)
+            break;
+    }
+
+    return top_venues
+}
+
 export default async function fetchAllData() {
     let date = new Date();
     date.setDate(date.getDate() - 1);
@@ -145,8 +171,11 @@ export default async function fetchAllData() {
     const events = await fetchEvents(start, end);
     const venues = await fetchVenues(start, end);
 
-    uploadEvents(events);
-    // uploadVenues(venues);
+    const top_venue_with_events = processVenues(venues.data, events.data);
+    
+    updateEvents(events.data);
+    updateVenues(top_venue_with_events);
 
-    return venues;
+    console.log("Finished fetch and update LCSD events and venues.")
+    return events.timestamp;
 }

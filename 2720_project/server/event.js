@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const EventSchema = Schema({
     eventid: { type: Number, required: true, unique: true },
     titlee: String,
-    // venueid: { type: Schema.Types.ObjectId, ref: 'Venue' },
     venueid: Number,
     desce: String,
     presenterorge: String,
@@ -13,13 +12,20 @@ const EventSchema = Schema({
 
 const Event = mongoose.model('Event', EventSchema);
 
-module.exports.find = async function (req, res) { }
+module.exports.find = async function (req, res) {
+    const e = req.body;
+    const event = await Event.findOne({ eventid: e.eventid });
+    if (event)
+        res.json(event)
+    else
+        res.json({ err: `Event ${e.eventid} not found` });
+}
 
 module.exports.create = async function (req, res) {
     const e = req.body;
-    const event = await Event.findOne({eventid: e.eventid});
-    if (event) 
-        return res.json({err: "Event already exists."});
+    const event = await Event.findOne({ eventid: e.eventid });
+    if (event)
+        return res.json({ err: "Event already exists." });
 
     try {
         let event = new Event(e);

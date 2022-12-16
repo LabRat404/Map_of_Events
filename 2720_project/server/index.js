@@ -108,7 +108,7 @@ app.delete("/deleteUsers", async (req, res) => {
     res.json({ status: "error", error: "No users" });
 });
 
-app.get("/getEvent", async (req, res) => {
+app.post("/getEvent", async (req, res) => {
   return event.find(req, res);
 })
 
@@ -120,7 +120,7 @@ app.put("/updateEvent", async (req, res) => {
     return event.update(req, res);
 })
 
-app.get("/getVenue", async (req, res) => {
+app.post("/getVenue", async (req, res) => {
   return venue.find(req, res);
 })
 
