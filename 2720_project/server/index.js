@@ -102,6 +102,7 @@ app.put("/updateUsers", async (req, res) => {
    else{
     results.username = req.body.username;
     results.password = req.body.password;
+    results.admin = false;
     results.save();
   }
 

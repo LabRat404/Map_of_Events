@@ -1,4 +1,5 @@
 import { render } from "@testing-library/react";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import React, { Component, useState, useEffect } from "react";
 export default function Preferences() {
  const [data1, setdata1] = useState([{"username": "loading"}]);
@@ -114,14 +115,14 @@ export default function Preferences() {
 
         {data1.map((_,index) => 
    <>
-          <input id={data1[index].username}></input>
-          <input id={data1[index].username+"p"}></input>
+          <input id={data1[index].username}readonly></input>
+          <input type="text" id={data1[index].username+"p"}readonly></input>
           <br></br>
-          <input id={data1[index].username+"username"}></input>
-          <input id={data1[index].username+"pw"}></input>
+          <input placeholder="New Username" id={data1[index].username+"username"} required></input>
+          <input placeholder="New Password" id={data1[index].username+"pw"}></input>
           <br></br>
-          <button onClick={(e)=>{ e.preventDefault(); updateUser(data1[index].username); setclick(true);}}>Update</button>  
-          <button onClick={(e)=>{ e.preventDefault(); delUser(data1[index].username); setclick(true);}}>Delete</button>  
+          <button className="btn btn-success"onClick={(e)=>{ e.preventDefault(); updateUser(data1[index].username); setclick(true);}}>Update</button>  
+          <button className="btn btn-danger" onClick={(e)=>{ e.preventDefault(); delUser(data1[index].username); setclick(true);}}>Delete</button>  
           <br></br>
           <br></br>
         
@@ -132,10 +133,10 @@ export default function Preferences() {
         
         )}
           <h5>Add a user</h5>
-          <input id="uname"></input>
-          <input id="pw"></input>
+          <input placeholder="Username" id="uname"></input>
+          <input placeholder="Password" id="pw"></input>
           <br></br>
-          <button id="add" onClick={(e)=>{ e.preventDefault(); addUser(); setclick(true);}}>Add User</button>  
+          <button id="add" className="btn btn-primary" onClick={(e)=>{ e.preventDefault(); addUser(); setclick(true);}}><i className="bi bi-plus"></i>Add User</button>  
       </form>
 
     </main>
