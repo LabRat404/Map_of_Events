@@ -12,9 +12,11 @@ let venues = [{venuesName: "Tai Po Public Library", quota: 100},
               {venuesName: "Fa Yuen Street Public Library", quota: 20},
               {venuesName: "Fanling Public Library", quota: 300}
             ];
+let sortedVenues =[];
 
 function Dashboard(){
   const [userName, setUserName] = useState();
+  const [clickedFav, setClickedFav] = useState(false);
 
   //get user name
   useEffect(()=>{
@@ -39,7 +41,7 @@ function Dashboard(){
   }
 
   function showFav(){
-
+    setClickedFav(!clickedFav);
   }
 
   return(
@@ -64,7 +66,9 @@ function Dashboard(){
       </div>
 
       {/* middle main content */}
-      <Tablelist/>
+      {!clickedFav && <Tablelist/> }
+      {clickedFav && <Favourite/>}
+      {/* <Container clickedFav = {clickedFav}/> */}
 
       <footer className="bg-purple">
         <i className="bi bi-clock"> </i>Last updated on <span id = "lastUpdatedTime">2022-12-14</span>.
@@ -73,9 +77,35 @@ function Dashboard(){
   );
 }
 
+function Favourite(props){
+  return(
+    <div className="container">
+      <div id = "favList" className="bg-danger p-5 border">
+        <div className="d-flex justify-content-between align-items-center bg-secondary">
+          <div className="p-2"></div>
+          <div className="p-2">Venues</div>
+          <div className="p-2"><button  type="submit" className="btn btn-primary"><i className="bi bi-sort-down"></i></button></div>
+        </div>
+        <div id = "tableList" className="list-group mb-3">
+          {venues.map((obj,index) => <List venuesObj={obj} i = {index} key={index}/>)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // User action 1
 function Tablelist(props){
   const [sort, updateSort] = useState(false);
+  const [choosedVenues, updateChoosedVenues] = useState(venues[0]); // selected venues from list, default = 1st venue
+  const [venuesIndex, updateVenuesIndex] = useState(0); // selected venues index from list
+
+  //function pass to child to update selected venues
+  function selectedVenues(index, v){ 
+    console.log(v);
+    updateVenuesIndex(index);
+    updateChoosedVenues(v);
+  }
 
   function sortEvent(sort){
     // console.log(sort);
@@ -83,7 +113,7 @@ function Tablelist(props){
       return "sort";
     }
     else{
-      return venues.map((obj,index) => <List venuesObj={obj} i = {index} key={index}/>);
+      return venues.map((obj,index) => <List venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>);
     }
   }
 
@@ -105,6 +135,7 @@ function Tablelist(props){
 
           <div id = "sideContent" className="col-7 bg-success">
             test content area(details info/ comment section?)
+            <SideContent sideVenues = {choosedVenues} sideIndex={venuesIndex}/>
           </div>
           
         </div>
@@ -113,17 +144,29 @@ function Tablelist(props){
   );
 }
 
+function SideContent(props){
+  return(
+    <div>
+      <br></br>
+      {props.sideIndex}
+      <br></br>
+      {props.sideVenues.venuesName}
+    </div>
+  );
+}
+
 function List(props){
-  const [selected, updateSelected] = useState(-1);
   const [favorite, updateFavorite] = useState(false);
   let i = props.i; //index
+  let venuesObj= props.venuesObj;
   let name = props.venuesObj.venuesName;
   let quota = props.venuesObj.quota;
   // console.log(name);
   
   // clicked link
   function handleClick(e){
-    console.log("selected " + name)
+    // console.log("selected " + name)
+    props.selectedVenues(i, venuesObj); //update parent Tablelist selectedVenues
   }
 
   //added to favourite
@@ -133,7 +176,6 @@ function List(props){
   }
 
   return(
-
     <div className='d-flex flex-row align-items-center'>
       <div onClick={(e) => handleClick(e)} className="list-group-item list-group-item-action p-4 border-bottom border-dark">
         <div><i className="bi bi-geo-alt"> </i>{name}</div>
