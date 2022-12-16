@@ -9,7 +9,6 @@ const jwt = require("jsonwebtoken");
 
 const JWT_SECRET =
   "hvdvay6ert72839289()aiyg8t87qt72393293883uhefiuh78ttq3ifi78272jbkj?[]]pou89ywe";
-
 const mongoUrl =
   "mongodb+srv://2720:2720password@2720project.vhyn50e.mongodb.net/test";
 
@@ -19,14 +18,19 @@ mongoose
     console.log("Connected to database");
      
 require("./user");
+const event = require("./event");
+const venue = require("./venue");
 const cors = require('cors'); 
+
 app.use(cors({
   origin: '*'
 }));
   const bodyParser = require('body-parser');
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
+
 const User = mongoose.model("User");
+
 app.post("/login-user", async (req, res) => {
     const { username, password } = req.body;
     
@@ -53,23 +57,28 @@ app.post("/login-user", async (req, res) => {
           });
         }
       } else {
-        return res.json({ error: "error" });
+        return res.json({
+          status: "ok",
+          data: token,
+          username: username,
+          adminFlag: false
+        });
       }
+    } else {
+      return res.json({ error: "error" });
     }
-    res.json({ status: "error", error: "Invalid Password" });
+  }
+  res.json({ status: "error", error: "Invalid Password" });
 });
 
 app.get("/getUsers", async (req, res) => {
-
   const user = await User.find( { "admin" : false } )
   if (!user) {
     return res.json({ error: "No user found" });
-  }else{
+  } else {
     return res.json(user);
   }
-
 });
-
 
 app.post("/addUsers", async (req, res) => {
 
@@ -84,10 +93,8 @@ app.post("/addUsers", async (req, res) => {
       admin: false,
     })
     res.json("hi");
-   
   }
 });
-
 
 app.put("/updateUsers", async (req, res) => {
   await User
@@ -116,6 +123,35 @@ app.delete("/deleteUsers", async(req, res) => {
   }
 });
 
+app.post("/getEvent", async (req, res) => {
+  return event.find(req, res);
+})
+
+app.post("/addEvent", async (req, res) => {
+  return event.create(req, res);
+})
+
+app.put("/updateEvent", async (req, res) => {
+    return event.update(req, res);
+})
+
+/* Only 10 venues are stored in DB */
+app.get("/getAllVenues", async (req, res) => {
+  return venue.findAll(req, res);
+})
+
+app.post("/getVenue", async (req, res) => {
+  return venue.find(req, res);
+})
+
+app.post("/addVenue", async (req, res) => {
+  return venue.create(req, res);
+})
+
+app.put("/updateVenue", async (req, res) => {
+  return venue.update(req, res);
+})
+
 
 app.listen(3001, () => {
     console.log("Server Started");
@@ -126,4 +162,3 @@ app.listen(3001, () => {
 
   })
   .catch((e) => console.log(e));
-  
