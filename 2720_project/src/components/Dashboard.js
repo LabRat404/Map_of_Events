@@ -58,7 +58,8 @@ function Dashboard(){
 
 
   function logout(){
-
+    localStorage.clear();
+    window.location.href = '/';
   }
 
   function showFav(){
