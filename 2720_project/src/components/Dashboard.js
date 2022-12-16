@@ -118,10 +118,10 @@ function Favourite(props){
   function sortEvent(sort){
     // console.log(sort);
     if(sort){
-      return venues.map((obj,index) => <List venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>);
+      return favLists.map((obj,index) => <ViewFavList venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>);
     }
     else{
-      return favLists.map((obj,index) => <List venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>);
+      return favLists.map((obj,index) => <ViewFavList venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>);
     }
   }
 
@@ -268,12 +268,62 @@ function List(props){
       </div>
       {/* fav icon star */}
       <div onClick={()=>addFav()} className='ms-auto p-2'>
-        <div className=''>
-          {favorite?<i className="bi bi-star-fill"></i>:<i className="bi bi-star"></i>}
+        <div className='btn'>
+          <i className="bi bi-plus-square-fill" style={{color: "black"}}></i>
         </div>
       </div>
-
     </div>
+  );
+}
+
+function ViewFavList(props){
+  const [favorite, updateFavorite] = useState(true);
+  let i = props.i; //index
+  let venuesObj= props.venuesObj;
+  let name = props.venuesObj.venuesName;
+  let quota = props.venuesObj.quota;
+  // console.log(name);
+  
+  // clicked link
+  function handleClick(e){
+    // console.log("selected " + name)
+    props.selectedVenues(i, venuesObj); //update parent Tablelist selectedVenues
+  }
+
+  //added to favourite
+  function addFav(){
+    updateFavorite(!favorite);
+
+    let objIndexInFavList = favLists.map(e => e.venuesName).indexOf(venuesObj.venuesName);
+    // console.log(objIndexInFavList);
+    // console.log(favLists);
+    if(objIndexInFavList == -1){ //no such venue in fav lists
+      favLists.push(venuesObj);
+      console.log(favLists);
+      window.localStorage.setItem(user, JSON.stringify(favLists)); //update fav in local store
+      
+    }
+    else{ //hv venue, delete it
+      favLists.splice(objIndexInFavList,1);
+      console.log(favLists);
+      window.localStorage.setItem(user, JSON.stringify(favLists)); //update fav in local store
+    }
+  }
+
+  return(
+    <div>
+    {favorite &&  <div className='d-flex flex-row align-items-center'>
+      <div onClick={(e) => handleClick(e)} className="list-group-item list-group-item-action p-4 border-bottom border-dark">
+        <div><i className="bi bi-geo-alt"> </i>{name}</div>
+        <div><i className="bi bi-calendar-event"> </i>{quota + " events"}</div>
+      </div>
+      {/* fav icon star */}
+      <div onClick={()=>addFav()} className='ms-auto p-2'>
+        <div className='btn'>
+          <i className="bi bi-dash-square-fill" style={{color: "black"}}></i>
+        </div>
+      </div>
+    </div>} </div>
   );
 }
 
