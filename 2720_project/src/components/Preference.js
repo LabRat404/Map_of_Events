@@ -111,7 +111,7 @@ export default function Preferences() {
           <br></br>
           <input value="New Username"></input>
           <input value="New Password"></input>
-          <p>----------------------------------------------------------------------------------</p>
+          <p>-------------------------------------------User Records-------------------------------------------</p>
 
         {data1.map((_,index) => 
    <>
@@ -132,9 +132,11 @@ export default function Preferences() {
          
         
         )}
-          <h5>Add a user</h5>
+           <p>-------------------------------------------Add new User-------------------------------------------</p>
+
           <input placeholder="Username" id="uname"></input>
           <input placeholder="Password" id="pw"></input>
+          <br></br>
           <br></br>
           <button id="add" className="btn btn-primary" onClick={(e)=>{ e.preventDefault(); addUser(); setclick(true);}}><i className="bi bi-plus"></i>Add User</button>  
       </form>
