@@ -19,6 +19,7 @@ let favLists =  [];
 function Dashboard(){
   const [userName, setUserName] = useState();
   const [clickedFav, setClickedFav] = useState(false);
+  const [search, setSearch] = useState("");
 
   //get user name
   useEffect(()=>{
@@ -75,7 +76,7 @@ function Dashboard(){
 
       <div className="mb-3  d-flex flex-row justify-content-center align-items-center">
         <div className="p-2">
-        <input id = "searchText" type="text" placeholder="Search for locations"></input>
+        <input id = "searchText" onInput={()=> setSearch(document.getElementById("searchText").value)} type="text" placeholder="Search for locations"></input>
         </div>
         <div className="p-2">
           <button id="searchBtn" className="btn btn-primary" type="submit"><i className="bi bi-search"></i></button>
@@ -85,8 +86,11 @@ function Dashboard(){
         </div>
       </div>
 
+
+
+
       {/* middle main content */}
-      {!clickedFav && <Tablelist/> }
+      {!clickedFav && <Tablelist content={search}/> }
       {clickedFav && <Favourite user = {userName}/>}
       {/* <Container clickedFav = {clickedFav}/> */}
 
@@ -119,7 +123,6 @@ function Tablelist(props){
   const [sort, updateSort] = useState(false);
   const [choosedVenues, updateChoosedVenues] = useState(venues[0]); // selected venues from list, default = 1st venue
   const [venuesIndex, updateVenuesIndex] = useState(0); // selected venues index from list
-
   //function pass to child to update selected venues
   function selectedVenues(index, v){ 
     console.log(v);
@@ -133,7 +136,8 @@ function Tablelist(props){
       return "sort";
     }
     else{
-      return venues.map((obj,index) => <List venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>);
+      return venues.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
+      <List venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<></>);
     }
   }
 

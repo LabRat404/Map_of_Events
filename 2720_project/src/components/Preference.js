@@ -19,19 +19,19 @@ export default function Preferences() {
     })
     .then((res) => res.json())
     .then((data) => {
-        console.log(data);
-
+      if(data!=null){
+        document.getElementById("pw").value = '';
+        document.getElementById("uname").value = '';
+      }
+        
     });
   
   }
   
   function updateUser(uname){
-   
-    console.log(uname+"username");
     fetch("http://localhost:3001/updateUsers", {
       method: "PUT",
       // crossDomain: true,
-
       headers: {
         "Content-Type": "application/json",
         // Accept: "application/json",
@@ -42,7 +42,12 @@ export default function Preferences() {
     })
     .then((res) => res.json())
     .then((data) => {
-        console.log(data);
+        if(data!=null){
+          document.getElementById(data+"username").value = '';
+          document.getElementById(data+"pw").value = "";
+       
+        }
+          
      
     });
   
@@ -115,8 +120,8 @@ export default function Preferences() {
 
         {data1.map((_,index) => 
    <>
-          <input id={data1[index].username}readonly></input>
-          <input type="text" id={data1[index].username+"p"}readonly></input>
+          <input id={data1[index].username}readOnly></input>
+          <input type="text" id={data1[index].username+"p"}readOnly></input>
           <br></br>
           <input placeholder="New Username" id={data1[index].username+"username"} required></input>
           <input placeholder="New Password" id={data1[index].username+"pw"}></input>
