@@ -4,16 +4,16 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { toBeEmpty } from '@testing-library/jest-dom/dist/matchers';
 
 let user;
-let venues = [{venuesName: "Tai Po Public Library", quota: 100},
-              {venuesName: "Sha Tin Town Hall (Cultural Activities Hall)", quota: 50},
-              {venuesName: "Fu Shan Public Library", quota: 30},
-              {venuesName: "Hong Kong Cultural Centre (Concert Hall)", quota: 10},
-              {venuesName: "Butterfly Estate Public Library", quota: 70},
-              {venuesName: "Chai Wan Public Library", quota: 80},
-              {venuesName: "City Hall Public Library", quota: 90},
-              {venuesName: "Electric Road Public Library", quota: 50},
-              {venuesName: "Fa Yuen Street Public Library", quota: 20},
-              {venuesName: "Fanling Public Library", quota: 300}
+let venues = [{venuesName: "Sha Tin Town Hall (Lecture Room 2)", quota: 36},
+              {venuesName: "Sha Tin Town Hall (Conference Room)", quota: 40},
+              {venuesName: "Sha Tin Town Hall (Lecture Room 1)", quota: 32},
+              {venuesName: "Sheung Wan Civic Centre (Lecture Hall)", quota: 26},
+              {venuesName: "Hong Kong Central Library", quota: 29},
+              {venuesName: "Sha Tin Town Hall (Dance Studio)", quota: 28},
+              {venuesName: "Tuen Mun Town Hall (Dance Studio)", quota: 25},
+              {venuesName: "Yuen Long Theatre (Dance Studio)", quota: 20},
+              {venuesName: "North District Town Hall (Function Room 1)", quota: 19},
+              {venuesName: "Sha Tin Town Hall (Music Studio)", quota: 34}
             ];
 let sortedVenues =[];
 let favLists =  [];
@@ -33,10 +33,10 @@ function Dashboard(){
     };
 
     let token = window.localStorage.getItem('token');
-    // console.log(token);
+    console.log(token);
     let decodedToken = parseJwt(token);
-    // console.log(decodedToken);
-    setUserName(decodedToken.email);
+    console.log(decodedToken);
+    setUserName(decodedToken.username);
     user = userName;
     // console.log(user);
     // window.localStorage.removeItem('user2');
@@ -128,19 +128,21 @@ function Favourite(props){
   }
 
   return(
-    <div className="container row bg-warning">
-      <div id = "favList" className="col-5 bg-danger border">
-        <div className="d-flex justify-content-between align-items-center bg-secondary">
-          <div className="p-2"></div>
-          <div className="p-2">Venues</div>
-          <div className="p-2"><button onClick={()=>updateSort(!sort)} type="submit" className="btn btn-primary"><i className="bi bi-sort-down"></i></button></div>
+    <div className="container bg-warning">
+      <div className="row">
+        <div id = "favList" className="col-5 bg-danger border">
+          <div className="d-flex justify-content-center align-items-center bg-secondary">
+            <div className="p-2"></div>
+            <div className="p-2">Venues</div>
+            {/* <div className="p-2"><button onClick={()=>updateSort(!sort)} type="submit" className="btn btn-primary"><i className="bi bi-sort-down"></i></button></div> */}
+          </div>
+          <div id = "tableList" className="list-group mb-3">
+            {sortEvent(sort)}
+          </div>
         </div>
-        <div id = "tableList" className="list-group mb-3">
-          {sortEvent(sort)}
+        <div id = "details" className="col-7 list-group mb-3">
+          <Outlet />
         </div>
-      </div>
-      <div id = "details" className="col-7 list-group mb-3">
-        <Outlet />
       </div>
     </div>
   );
@@ -210,8 +212,9 @@ function Tablelist(props){
           </div>
 
           <div id = "sideContent" className="col-7 bg-success">
-            test content area(details info/ comment section?)
-            <SideContent sideVenues = {choosedVenues} sideIndex={venuesIndex}/>
+            {/* <SideContent sideVenues = {choosedVenues} sideIndex={venuesIndex}/>
+             */}
+             <Outlet />
           </div>
           
         </div>
@@ -267,9 +270,11 @@ function List(props){
 
   return(
     <div className='d-flex flex-row align-items-center'>
-      <div onClick={(e) => handleClick(e)} className="list-group-item list-group-item-action p-4 border-bottom border-dark">
-        <div><i className="bi bi-geo-alt"> </i>{name}</div>
-        <div><i className="bi bi-calendar-event"> </i>{quota + " events"}</div>
+      <div className="list-group-item list-group-item-action p-4 border-bottom border-dark">
+        <Link to ={`fav/${name}`} style={{ textDecoration: 'none', color: "black" }}>
+          <div><i className="bi bi-geo-alt"> </i>{name}</div>
+          <div><i className="bi bi-calendar-event"> </i>{quota + " events"}</div>
+        </Link>
       </div>
       {/* fav icon star */}
       <div onClick={()=>addFav()} className='ms-auto p-2'>
@@ -318,7 +323,7 @@ function ViewFavList(props){
   return(
     <div>
     {favorite &&  <div className='d-flex flex-row align-items-center'>
-      <Link to ={`fav/${name}`}>
+      <Link to ={`fav/${name}`} style={{ textDecoration: 'none' }}>
       {/* <Link to ={`${name}`}> */}
         <div className="list-group-item list-group-item-action p-4 border-bottom border-dark">
           <div><i className="bi bi-geo-alt"> </i>{name}</div>
