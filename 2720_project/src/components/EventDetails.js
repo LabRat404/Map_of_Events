@@ -13,8 +13,6 @@ function EventDetails(props){
       setCommentList((comment_list) => [...comment_list, comment])
     }
   
-  
-  
     return (
       <div>
         <div class="my-3">
@@ -130,17 +128,17 @@ function EventDetails(props){
             </div>
   
   
-            {comment_list.map((item) => (
+            {comment_list.map((comment) => (
               <div>
                 <div class="card-body p-4">
                   <div class="d-flex flex-start">
                     <div class="row">
                       <div class="d-flex mb-1">
-                        <p class="fw-bold m-0">{item.username}</p>
-                        <p class="m-0 ms-1"> on {item.date} </p>
+                        <p class="fw-bold m-0">user1</p>
+                        <p class="m-0 ms-1"> on 17 Dec 2022 </p>
                       </div>
                       <div class="d-flex">
-                        <p class="m-0">{item.body}</p>
+                        <p class="m-0">{comment}</p>
                       </div>
                     </div>
                   </div>

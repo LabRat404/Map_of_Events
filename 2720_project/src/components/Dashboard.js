@@ -136,9 +136,6 @@ function Dashboard(){
         </div>
       </div>
 
-
-
-
       {/* middle main content */}
       {/* <Outlet /> */}
       {!clickedFav && <Tablelist content={search} clickedLink={clickedLink} updateClickedLink={updateClickedLink}/> }
