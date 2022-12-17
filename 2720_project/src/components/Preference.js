@@ -69,7 +69,8 @@ export default function Preferences() {
     .then((res) => res.json())
     .then((data) => {
       
-        console.log(data);
+
+
       
     });
   
@@ -103,7 +104,7 @@ export default function Preferences() {
         document.getElementById(data1[i].username+"p").style.backgroundColor = "#CCCCCC";
       }
       for(let i = 0; i<data1.length; i++){
-        console.log(document.getElementById(data1[i].username+"username").value);
+  
         if( document.getElementById(data1[i].username+"username").value !="" && document.getElementById(data1[i].username+"pw").value !=""){
           
           document.getElementById(data1[i].username+"up").classList.remove('disabled');
@@ -140,14 +141,16 @@ export default function Preferences() {
           <br></br>
           <input value="New Username"></input>
           <input value="New Password"></input>
-          <p>-------------------------------------------User Records-------------------------------------------</p>
+          <br></br>
+          <br></br>
+          <p>------User Records------</p>
 
         {data1.map((_,index) => 
    <>
           <input id={data1[index].username} readOnly></input>
           <input type="text" id={data1[index].username+"p"} readOnly></input>
           <br></br>
-          <input placeholder="New Username" id={data1[index].username+"username"} required></input>
+          <input placeholder="Confirm/New Username" id={data1[index].username+"username"} required></input>
           <input placeholder="New Password" id={data1[index].username+"pw"}></input>
           <br></br>
           <button id = {data1[index].username + "up"} className="btn btn-success"onClick={(e)=>{ e.preventDefault(); updateUser(data1[index].username); setclick(true);}}><i class="bi bi-pencil-square"></i> Update</button>  
@@ -161,7 +164,7 @@ export default function Preferences() {
          
         
         )}
-           <p>-------------------------------------------Add new User-------------------------------------------</p>
+           <p>------Add new User------</p>
 
           <input placeholder="Username" id="uname"></input>
           <input placeholder="Password" id="pw"></input>

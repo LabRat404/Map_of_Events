@@ -24,6 +24,7 @@ function Dashboard() {
   const [userName, setUserName] = useState();
   const [clickedFav, setClickedFav] = useState(false);
   const [search, setSearch] = useState("");
+
   // let [lastUpdatedTime, fetchEvents] = useState(0);
 
   // // fetch and update events; retrieve last updated timestamp
@@ -32,6 +33,9 @@ function Dashboard() {
   // }, [])
 
   // console.log(lastUpdatedTime);
+  
+  const [realV, updateV] = useState([]);
+  const [clickedLink, updateClickedLink] = useState(false);
 
   //get user name
   useEffect(() => {
@@ -54,8 +58,6 @@ function Dashboard() {
     // window.localStorage.removeItem('user2');
     if (userName != undefined) {
       let userFavList = window.localStorage.getItem(userName);
-      if (userFavList == null) { //no such user
-        console.log("new user, empty fav list");
         window.localStorage.setItem(userName, JSON.stringify([]));
         // window.localStorage.removeItem('testuser');
         // console.log(favLists);
@@ -67,16 +69,56 @@ function Dashboard() {
         // console.log("old user, hv list");
       }
     }
-  });
+    let currentTime = new Date();
+    let str = "";
+    str += currentTime.toLocaleDateString();
+    str += " ";
+    str += currentTime.getHours() + ":";
+    str += currentTime.getMinutes() + ":";
+    str += currentTime.getSeconds();
+    // console.log(currentTime.toLocaleDateString());
+    document.getElementById("lastUpdatedTime").innerText = str;
+
+    fetchData();
+  }, [userName,realV]);
+
+  function fetchData(){
+    const hostname = "localhost";
+    fetch("http://"+hostname+":3001/getAllVenues", {
+      method: "GET",
+      // crossDomain: true,
+      headers: {
+        "Content-Type": "application/json",
+        // Accept: "application/json",
+        // "Access-Control-Allow-Origin": "*",
+      }
+    }).then(res => res.json())
+    .then(
+      realVenues =>{
+        // updateV(realVenues); //save to state
+        // console.log(realVenues);
+        for(let i  = 0 ;i < 10;i++){
+          venues[i].venuesName = realVenues[i].venuee;
+          venues[i].quota = realVenues[i].events.length;
+        }
+        // console.log(venues);
+      }
+    );
+  }
 
 
-  function logout() {
-    localStorage.clear();
+  function logout(){
+    localStorage.removeItem("admin");
+    localStorage.removeItem("token");
     window.location.href = '/';
   }
 
   function showFav() {
     setClickedFav(!clickedFav);
+    updateClickedLink(false);
+  }
+  function backToList(){
+    updateClickedLink(false);
   }
 
   return (
@@ -91,29 +133,31 @@ function Dashboard() {
         </div>
       </header>
 
-
       <div className="mb-3  d-flex flex-row justify-content-center align-items-center">
         <div className="p-2">
-          <i className="bi bi-search"> <input id="searchText" onInput={() => setSearch(document.getElementById("searchText").value)} type="text" placeholder="Search for locations"></input>
-          </i>
+          <Link to ="/Dashboard">
+          <button id="showFavBtn" onClick={()=>backToList()} className="btn btn-primary" type="submit">Back</button>
+          </Link>
         </div>
-
+        
+        <div className="p-2">
+        <i className="bi bi-search"> <input id = "searchText" onInput={()=> setSearch(document.getElementById("searchText").value)} type="text" placeholder="Search for locations"></input>
+        </i>
+         </div>
+         
         <div className="p-2">
           <button id="showFavBtn" onClick={() => showFav()} className="btn btn-primary" type="submit">Show favorite locations</button>
         </div>
       </div>
 
-
-
-
       {/* middle main content */}
       {/* <Outlet /> */}
-      {!clickedFav && <Tablelist content={search} />}
-      {clickedFav && <Favourite user={userName} />}
+      {!clickedFav && <Tablelist content={search} clickedLink={clickedLink} updateClickedLink={updateClickedLink}/> }
+      {clickedFav && <Favourite content={search} clickedLink={clickedLink} updateClickedLink={updateClickedLink}/>}
       {/* <Container clickedFav = {clickedFav}/> */}
 
       <footer className="bg-purple">
-        <i className="bi bi-clock"> </i>Last updated on <span id="lastUpdatedTime">2022-12-14</span>.
+        <i className="bi bi-clock"> </i>Last updated on <span id = "lastUpdatedTime">2022-12-17 14:00</span>
       </footer>
     </>
   );
@@ -134,18 +178,21 @@ function Favourite(props) {
 
   function sortEvent(sort) {
     // console.log(sort);
-    if (sort) {
-      return favLists.map((obj, index) => <ViewFavList venuesObj={obj} i={index} key={index} selectedVenues={selectedVenues} />);
+    if(sort){
+      return favLists.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
+      <ViewFavList clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<></>);
     }
-    else {
-      return favLists.map((obj, index) => <ViewFavList venuesObj={obj} i={index} key={index} selectedVenues={selectedVenues} />);
+    else{
+      return favLists.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
+      <ViewFavList clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:< div key={index}></div>);
     }
   }
 
   return (
     <div className="container bg-warning">
       <div className="row">
-        <div id="favList" className="col-5 bg-danger border">
+      {!props.clickedLink &&
+        <div id = "favList" className="bg-danger border">
           <div className="d-flex justify-content-center align-items-center bg-secondary">
             <div className="p-2"></div>
             <div className="p-2">Venues</div>
@@ -154,10 +201,10 @@ function Favourite(props) {
           <div id="tableList" className="list-group mb-3">
             {sortEvent(sort)}
           </div>
-        </div>
-        <div id="details" className="col-7 list-group mb-3">
+        </div>}
+        {props.clickedLink && <div id = "details" className=" list-group mb-3">
           <Outlet />
-        </div>
+        </div>}
       </div>
     </div>
   );
@@ -178,44 +225,42 @@ function Tablelist(props) {
 
   function sortEvent(mod1) {
     // console.log(sort);
-    // let tmp = [];
-    // let tmp2 = []; 
-    // for (let i = 0; i < venues.length; i++){
-    //   tmp.push(venues.quota);
-    //   tmp2.push(venues.quota);
-    // }
-    // tmp.sort();
-    // let ind = [];
-    // for (let i = 0; i < venues.length; i++){
-    //   ind.push(tmp2.indexOf[tmp[i]]);
-    // }
+      // let tmp = [];
+      // let tmp2 = []; 
+      // for (let i = 0; i < venues.length; i++){
+      //   tmp.push(venues.quota);
+      //   tmp2.push(venues.quota);
+      // }
+      // tmp.sort();
+      // let ind = [];
+      // for (let i = 0; i < venues.length; i++){
+      //   ind.push(tmp2.indexOf[tmp[i]]);
+      // }
 
-    let venues2 = JSON.parse(JSON.stringify(venues));
-    venues2.sort((a, b) => a.quota - b.quota);
+      let venues2= JSON.parse(JSON.stringify(venues)); 
+      venues2.sort((a,b)=>a.quota-b.quota);
 
-    if (mod1 == 3) {
-      venues2.sort((a, b) => b.quota - a.quota);
-      return venues2.map((obj, index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase()) ?
-        <List venuesObj={obj} i={index} key={index} selectedVenues={selectedVenues} /> : <></>);
-    }
+      if (mod1 ==3){
+        venues2.sort((a,b)=>b.quota-a.quota);
+        return venues2.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
+      <List clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<div key={index}></div>);
+      }
 
-    if (mod1 == 2) { // low to high
-      return venues2.map((obj, index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase()) ?
-        <List venuesObj={obj} i={index} key={index} selectedVenues={selectedVenues} /> : <></>);
-    }
-    if (mod1 == 1) {
-      return venues.map((obj, index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase()) ?
-        <List venuesObj={obj} i={index} key={index} selectedVenues={selectedVenues} /> : <></>);
-    }
-
+      if (mod1 == 2){ // low to high
+        return venues2.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
+      <List clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<div key={index}></div>);
+      }
+      if (mod1 == 1){
+      return venues.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
+      <List clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<div key={index}></div>);}
   }
 
   return (
     <div className="container">
       <main>
-        <div id="mainContent" className="d-flex flex-row row mb-3">
-
-          <div id="table" className="col-5 bg-warning">
+        <div id = "mainContent" className="d-flex flex-row row mb-3">
+          
+          {!props.clickedLink && <div id = "table" className=" bg-warning">
             <div className="d-flex justify-content-between align-items-center bg-secondary">
               <div className="p-2"></div>
               <div className="p-2">Venues</div>
@@ -225,13 +270,14 @@ function Tablelist(props) {
             <div id="tableList" className="list-group mb-3">
               {sortEvent(mod)}
             </div>
-          </div>
+          </div>}
 
-          <div id="sideContent" className="col-7 bg-success">
-            <SideContent sideVenues={choosedVenues} sideIndex={venuesIndex} />
-            {/* <Outlet /> */}
-          </div>
-
+          {props.clickedLink && <div id = "sideContent" className="bg-success">
+            {/* <SideContent sideVenues = {choosedVenues} sideIndex={venuesIndex}/>
+             */}
+             <Outlet />
+          </div>}
+          
         </div>
       </main>
     </div>
@@ -415,7 +461,8 @@ function List(props) {
   // clicked link
   function handleClick(e) {
     // console.log("selected " + name)
-    props.selectedVenues(i, venuesObj); //update parent Tablelist selectedVenues
+    // props.selectedVenues(i, venuesObj); //update parent Tablelist selectedVenues
+    props.updateClickedLink(!props.clickedLink);
   }
 
   //added to favourite
@@ -441,10 +488,12 @@ function List(props) {
   return (
     <div className='d-flex flex-row align-items-center'>
       <div className="list-group-item list-group-item-action p-4 border-bottom border-dark">
-        <Link to={`fav/${name}`} style={{ textDecoration: 'none', color: "black" }}>
-          <div><i className="bi bi-geo-alt"> </i>{name}</div>
-          <div><i className="bi bi-calendar-event"> </i>{quota + " events"}</div>
-        </Link>
+        <div onClick={(e)=>handleClick(e)}>
+          <Link to ={`${name}`} style={{ textDecoration: 'none', color: "black" }}>
+            <div><i className="bi bi-geo-alt"> </i>{name}</div>
+            <div><i className="bi bi-calendar-event"> </i>{quota + " events"}</div>
+          </Link>
+         </div>
       </div>
       {/* fav icon star */}
       <div onClick={() => addFav()} className='ms-auto p-2'>
@@ -467,7 +516,8 @@ function ViewFavList(props) {
   // clicked link
   function handleClick(e) {
     // console.log("selected " + name)
-    props.selectedVenues(i, venuesObj); //update parent Tablelist selectedVenues
+    // props.selectedVenues(i, venuesObj); //update parent Tablelist selectedVenues
+    props.updateClickedLink(!props.clickedLink);
   }
 
   //added to favourite
@@ -492,19 +542,19 @@ function ViewFavList(props) {
 
   return (
     <div>
-      {favorite && <div className='d-flex flex-row align-items-center'>
-        <Link to={`fav/${name}`} style={{ textDecoration: 'none' }}>
-          {/* <Link to ={`${name}`}> */}
-          <div className="list-group-item list-group-item-action p-4 border-bottom border-dark">
-            <div><i className="bi bi-geo-alt"> </i>{name}</div>
-            <div><i className="bi bi-calendar-event"> </i>{quota + " events"}</div>
+    {favorite &&  <div className='d-flex flex-row align-items-center'>
+      <div className="list-group-item list-group-item-action p-4 border-bottom border-dark">
+        <div onClick={(e)=>handleClick(e)}>
+            <Link to ={`${name}`} style={{ textDecoration: 'none', color: "black" }}>
+                <div><i className="bi bi-geo-alt"> </i>{name}</div>
+                <div><i className="bi bi-calendar-event"> </i>{quota + " events"}</div>
+            </Link>
           </div>
-        </Link>
-        {/* fav icon star */}
-        <div onClick={() => addFav()} className='ms-auto p-2'>
-          <div className='btn'>
-            <i className="bi bi-dash-square-fill" style={{ color: "black" }}></i>
-          </div>
+      </div>
+      {/* fav icon star */}
+      <div onClick={()=>addFav()} className='ms-auto p-2'>
+        <div className='btn'>
+          <i className="bi bi-dash-square-fill" style={{color: "black"}}></i>
         </div>
       </div>} </div>
   );

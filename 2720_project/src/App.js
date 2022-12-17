@@ -5,6 +5,7 @@ import Dashboard from './components/Dashboard';
 import Preferences from './components/Preference';
 import Login from './components/Login';
 import EventDetails from './components/EventDetails';
+import DefaultPage from './components/DefaultPage';
 
 function App() {
   /** 
@@ -21,14 +22,13 @@ function App() {
   */
   return (
     <div className="wrapper">
-      <h1>Application</h1>
       <div className="App">
         <div className="auth-wrapper">
           <div className="auth-inner">
             <Routes>
               <Route exact path="/" element={<Login />} />
               <Route path="/Dashboard" element={<Dashboard />}>
-                <Route path="fav/:vName" element={<EventDetails />}/>
+                <Route path=":vName" element={<EventDetails />}/>
               </Route>
               <Route path="/Preference" element={<Preferences />} />
             </Routes>
