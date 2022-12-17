@@ -3,21 +3,24 @@ import { BrowserRouter, Navigate, Route, Routes, useNavigate, Link, Outlet } fro
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { toBeEmpty } from '@testing-library/jest-dom/dist/matchers';
 import fetchAllData from '../hooks/Fetch.js'
+import * as API from './Utilities.js'
 
 let user;
-let venues = [{ venuesName: "Sha Tin Town Hall (Lecture Room 2)", quota: 36 },
-{ venuesName: "Sha Tin Town Hall (Conference Room)", quota: 40 },
-{ venuesName: "Sha Tin Town Hall (Lecture Room 1)", quota: 32 },
-{ venuesName: "Sheung Wan Civic Centre (Lecture Hall)", quota: 26 },
-{ venuesName: "Hong Kong Central Library", quota: 29 },
-{ venuesName: "Sha Tin Town Hall (Dance Studio)", quota: 28 },
-{ venuesName: "Tuen Mun Town Hall (Dance Studio)", quota: 25 },
-{ venuesName: "Yuen Long Theatre (Dance Studio)", quota: 20 },
-{ venuesName: "North District Town Hall (Function Room 1)", quota: 19 },
-{ venuesName: "Sha Tin Town Hall (Music Studio)", quota: 34 }
-];
+let venues = [];
+// [{ venuesName: "Sha Tin Town Hall (Lecture Room 2)", quota: 36 },
+// { venuesName: "Sha Tin Town Hall (Conference Room)", quota: 40 },
+// { venuesName: "Sha Tin Town Hall (Lecture Room 1)", quota: 32 },
+// { venuesName: "Sheung Wan Civic Centre (Lecture Hall)", quota: 26 },
+// { venuesName: "Hong Kong Central Library", quota: 29 },
+// { venuesName: "Sha Tin Town Hall (Dance Studio)", quota: 28 },
+// { venuesName: "Tuen Mun Town Hall (Dance Studio)", quota: 25 },
+// { venuesName: "Yuen Long Theatre (Dance Studio)", quota: 20 },
+// { venuesName: "North District Town Hall (Function Room 1)", quota: 19 },
+// { venuesName: "Sha Tin Town Hall (Music Studio)", quota: 34 }
+// ];
 let sortedVenues = [];
 let favLists = [];
+const hostname = "18.210.46.64";
 
 function Dashboard() {
   const [userName, setUserName] = useState();
@@ -25,20 +28,20 @@ function Dashboard() {
   const [search, setSearch] = useState("");
   const [realV, updateV] = useState([]);
   const [clickedLink, updateClickedLink] = useState(false);
+
+  const [venueList, setVenuList] = useState([]);
   const [lastUpdatedTime, setLastUpdatedTime] = useState('not defined');
 
   // fetch and update events; retrieve last updated timestamp
   useEffect(() => {
-    async function wrapped() {
-      const timestamp = await fetchAllData(); // == Fetch.fetchAllData
-      setLastUpdatedTime(timestamp);
-      console.log('wrapped', timestamp)
-      return timestamp;
-    }
-    let timestamp = wrapped();
-    setLastUpdatedTime(timestamp);
-    console.log('useEffect', lastUpdatedTime)
+    fetchAllData()
+      .then((timestamp) => {
+        setLastUpdatedTime(timestamp);
+        document.getElementById("lastUpdatedTime").innerText = timestamp;
+      })
   }, [])
+
+  console.log('lastUpdatedTime:', lastUpdatedTime)
 
   //get user name
   useEffect(() => {
@@ -73,43 +76,18 @@ function Dashboard() {
         // console.log("old user, hv list");
       }
     }
-    let currentTime = new Date();
-    let str = "";
-    str += currentTime.toLocaleDateString();
-    str += " ";
-    str += currentTime.getHours() + ":";
-    str += currentTime.getMinutes() + ":";
-    str += currentTime.getSeconds();
-    // console.log(currentTime.toLocaleDateString());
-    document.getElementById("lastUpdatedTime").innerText = str;
-
-    fetchData();
   }, [userName, realV]);
 
-  function fetchData() {
-    const hostname = "18.210.46.64";
-    fetch("http://" + hostname + ":3001/getAllVenues", {
-      method: "GET",
-      // crossDomain: true,
-      headers: {
-        "Content-Type": "application/json",
-        // Accept: "application/json",
-        // "Access-Control-Allow-Origin": "*",
-      }
-    }).then(res => res.json())
-      .then(
-        realVenues => {
-          // updateV(realVenues); //save to state
-          // console.log(realVenues);
-          for (let i = 0; i < 10; i++) {
-            venues[i].venuesName = realVenues[i].venuee;
-            venues[i].quota = realVenues[i].events.length;
-          }
-          // console.log(venues);
-        }
-      );
-  }
-
+  // get venues
+  useEffect(() => {
+    // if (!"venueList" in window.sessionStorage)
+    API.getAllVenues()
+      .then((res) => {
+        setVenuList(res);
+        venues = res;
+        window.sessionStorage.setItem("venueList", res);
+      })
+  }, []);
 
   function logout() {
     localStorage.removeItem("admin");
@@ -158,7 +136,7 @@ function Dashboard() {
       {/* <Container clickedFav = {clickedFav}/> */}
 
       <footer className="bg-purple">
-        <i className="bi bi-clock"> </i>Last updated on <span id="lastUpdatedTime">2022-12-17 14:00</span>
+        <i className="bi bi-clock"> </i>Last updated on <span id="lastUpdatedTime">undefined</span>
       </footer>
     </>
   );
@@ -172,7 +150,7 @@ function Favourite(props) {
 
   //function pass to child to update selected venues
   function selectedVenues(index, v) {
-    console.log(v);
+    // console.log(v);
     updateVenuesIndex(index);
     updateChoosedVenues(v);
   }
@@ -181,19 +159,19 @@ function Favourite(props) {
   function sortEvent(mod1) {
     // console.log(sort);
     let list2 = JSON.parse(JSON.stringify(favLists));
-    list2.sort((a, b) => a.quota - b.quota);
+    list2.sort((a, b) => a.events.length - b.events.length);
 
     if (mod1 == 2) {
-      return list2.map((obj, index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase()) ?
+      return list2.map((obj, index) => obj.venuee.toLowerCase().includes(props.content.toLowerCase()) ?
         <ViewFavList clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i={index} key={index} selectedVenues={selectedVenues} /> : <></>);
     }
     else if (mod1 == 1) {
-      return favLists.map((obj, index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase()) ?
+      return favLists.map((obj, index) => obj.venuee.toLowerCase().includes(props.content.toLowerCase()) ?
         <ViewFavList clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i={index} key={index} selectedVenues={selectedVenues} /> : < div key={index}></div>);
     }
     else if (mod1 == 3) {
-      list2.sort((a, b) => b.quota - a.quota);
-      return list2.map((obj, index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase()) ?
+      list2.sort((a, b) => b.events.length - a.events.length);
+      return list2.map((obj, index) => obj.venuee.toLowerCase().includes(props.content.toLowerCase()) ?
         <ViewFavList clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i={index} key={index} selectedVenues={selectedVenues} /> : <></>)
     }
   }
@@ -230,7 +208,7 @@ function Tablelist(props) {
   const [mod, setMod] = useState(1);
   //function pass to child to update selected venues
   function selectedVenues(index, v) {
-    console.log(v);
+    // console.log(v);
     updateVenuesIndex(index);
     updateChoosedVenues(v);
   }
@@ -240,8 +218,8 @@ function Tablelist(props) {
     // let tmp = [];
     // let tmp2 = []; 
     // for (let i = 0; i < venues.length; i++){
-    //   tmp.push(venues.quota);
-    //   tmp2.push(venues.quota);
+    //   tmp.push(venues.events.length);
+    //   tmp2.push(venues.events.length);
     // }
     // tmp.sort();
     // let ind = [];
@@ -250,20 +228,20 @@ function Tablelist(props) {
     // }
 
     let venues2 = JSON.parse(JSON.stringify(venues));
-    venues2.sort((a, b) => a.quota - b.quota);
+    venues2.sort((a, b) => a.events.length - b.events.length);
 
     if (mod1 == 3) {
-      venues2.sort((a, b) => b.quota - a.quota);
-      return venues2.map((obj, index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase()) ?
+      venues2.sort((a, b) => b.events.length - a.events.length);
+      return venues2.map((obj, index) => obj.venuee.toLowerCase().includes(props.content.toLowerCase()) ?
         <List clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i={index} key={index} selectedVenues={selectedVenues} /> : <div key={index}></div>);
     }
 
     if (mod1 == 2) { // low to high
-      return venues2.map((obj, index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase()) ?
+      return venues2.map((obj, index) => obj.venuee.toLowerCase().includes(props.content.toLowerCase()) ?
         <List clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i={index} key={index} selectedVenues={selectedVenues} /> : <div key={index}></div>);
     }
     if (mod1 == 1) {
-      return venues.map((obj, index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase()) ?
+      return venues.map((obj, index) => obj.venuee.toLowerCase().includes(props.content.toLowerCase()) ?
         <List clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i={index} key={index} selectedVenues={selectedVenues} /> : <div key={index}></div>);
     }
 
@@ -300,8 +278,8 @@ function List(props) {
   const [favorite, updateFavorite] = useState(false);
   let i = props.i; //index
   let venuesObj = props.venuesObj;
-  let name = props.venuesObj.venuesName;
-  let quota = props.venuesObj.quota;
+  let name = props.venuesObj.venuee;
+  let quota = props.venuesObj.events.length;
   // console.log(name);
 
   // clicked link
@@ -315,18 +293,18 @@ function List(props) {
   function addFav() {
     updateFavorite(!favorite);
 
-    let objIndexInFavList = favLists.map(e => e.venuesName).indexOf(venuesObj.venuesName);
+    let objIndexInFavList = favLists.map(e => e.venuee).indexOf(venuesObj.venuee);
     // console.log(objIndexInFavList);
     // console.log(favLists);
     if (objIndexInFavList == -1) { //no such venue in fav lists
       favLists.push(venuesObj);
-      console.log(favLists);
+      // console.log(favLists);
       window.localStorage.setItem(user, JSON.stringify(favLists)); //update fav in local store
 
     }
     else { //hv venue, delete it
       favLists.splice(objIndexInFavList, 1);
-      console.log(favLists);
+      // console.log(favLists);
       window.localStorage.setItem(user, JSON.stringify(favLists)); //update fav in local store
     }
   }
@@ -355,8 +333,8 @@ function ViewFavList(props) {
   const [favorite, updateFavorite] = useState(true);
   let i = props.i; //index
   let venuesObj = props.venuesObj;
-  let name = props.venuesObj.venuesName;
-  let quota = props.venuesObj.quota;
+  let name = props.venuesObj.venuee;
+  let quota = props.venuesObj.events.length;
   // console.log(name);
 
   // clicked link
@@ -370,18 +348,18 @@ function ViewFavList(props) {
   function addFav() {
     updateFavorite(!favorite);
 
-    let objIndexInFavList = favLists.map(e => e.venuesName).indexOf(venuesObj.venuesName);
+    let objIndexInFavList = favLists.map(e => e.venuee).indexOf(venuesObj.venuee);
     // console.log(objIndexInFavList);
     // console.log(favLists);
     if (objIndexInFavList == -1) { //no such venue in fav lists
       favLists.push(venuesObj);
-      console.log(favLists);
+      // console.log(favLists);
       window.localStorage.setItem(user, JSON.stringify(favLists)); //update fav in local store
 
     }
     else { //hv venue, delete it
       favLists.splice(objIndexInFavList, 1);
-      console.log(favLists);
+      // console.log(favLists);
       window.localStorage.setItem(user, JSON.stringify(favLists)); //update fav in local store
     }
   }

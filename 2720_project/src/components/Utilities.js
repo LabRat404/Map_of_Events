@@ -3,13 +3,9 @@ export async function getAllVenues() {
         method: "GET",
         headers: {
             "Content-Type": 'application/json',
-        },
-        body: JSON.stringify({ eventid: 141097 })
+        }
     })
         .then((res) => res.json())
-        .then((obj) => {
-            console.log(obj);
-        })
 }
 
 export async function getEvent(id) {
@@ -21,9 +17,6 @@ export async function getEvent(id) {
         body: JSON.stringify({ eventid: id })
     })
         .then((res) => res.json())
-        .then((obj) => {
-            console.log(obj);
-        })
 }
 
 export async function getCommentList(id) {
@@ -35,9 +28,6 @@ export async function getCommentList(id) {
         body: JSON.stringify({ venueid: id })
     })
         .then((res) => res.json())
-        .then((obj) => {
-            console.log(obj);
-        })
 }
 
 export async function updateComment(id, comment) {
@@ -52,8 +42,4 @@ export async function updateComment(id, comment) {
         })
     })
         .then((res) => res.json())
-        .then((obj) => {
-            if (obj.err)
-                console.log(obj.err);
-        })
 }
