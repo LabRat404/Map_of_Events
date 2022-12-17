@@ -173,9 +173,9 @@ export default async function fetchAllData() {
 
     const top_venue_with_events = processVenues(venues.data, events.data);
     
-    updateEvents(events.data);
+    // updateEvents(events.data);
     updateVenues(top_venue_with_events);
 
-    console.log("Finished fetch and update LCSD events and venues.")
+    console.log(`Finished fetch and update LCSD events and venues. Last timestamp ${events.timestamp}`)
     return events.timestamp;
 }

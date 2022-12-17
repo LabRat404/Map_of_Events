@@ -8,11 +8,6 @@ const VenueSchema = Schema({
     longitude: Number,
     // events: [{ type: Schema.Types.ObjectId, ref: 'Venue' }],
     events: [Number],
-    comments: [{
-        username: { type: Schema.Types.ObjectId, ref: 'User' },
-        body: String,
-        date: Date,
-    }]
 });
 
 module.exports.update = async function (req, res) { }
@@ -58,7 +53,6 @@ module.exports.update = async function (req, res) {
         let venue = await Venue.findOne({ venueid: e.venueid });
         if (!venue) {
             venue = new Venue(e);
-            // venue.comments = [];
             venue.save();
         } else {
             venue.venueid = e.venueid;
@@ -66,7 +60,6 @@ module.exports.update = async function (req, res) {
             venue.latitude = e.latitude;
             venue.longitude = e.longitude;
             venue.events = e.events;
-            // no update to comment
             venue.save();
         }
     } catch (e) {
