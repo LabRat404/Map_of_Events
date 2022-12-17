@@ -147,7 +147,7 @@ export default function Preferences() {
           <input id={data1[index].username} readOnly></input>
           <input type="text" id={data1[index].username+"p"} readOnly></input>
           <br></br>
-          <input placeholder="New Username" id={data1[index].username+"username"} required></input>
+          <input placeholder="Confirm/New Username" id={data1[index].username+"username"} required></input>
           <input placeholder="New Password" id={data1[index].username+"pw"}></input>
           <br></br>
           <button id = {data1[index].username + "up"} className="btn btn-success"onClick={(e)=>{ e.preventDefault(); updateUser(data1[index].username); setclick(true);}}><i class="bi bi-pencil-square"></i> Update</button>  
