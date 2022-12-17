@@ -1,7 +1,7 @@
 import React, { Component, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import fetchLSCD from '../hooks/Fetch.js'
-
+import "bootstrap-icons/font/bootstrap-icons.css";
 function Login (props) {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
@@ -43,7 +43,9 @@ function Login (props) {
       });
   }
   return (
+    
     <form className="form-control" onSubmit={handleSubmit}>
+      <img width={"750"} class="img-fluid img-thumbnail" src={process.env.PUBLIC_URL + '/menu.jpeg'} alt="logo" />
       <h3>Sign In</h3>
       <div className="mb-3">
         <label>Username</label>

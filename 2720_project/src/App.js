@@ -21,7 +21,7 @@ function App() {
   */
   return (
     <div className="wrapper">
-      <h1>Application</h1>
+      <h1>Where's My Event</h1>
       <div className="App">
         <div className="auth-wrapper">
           <div className="auth-inner">
