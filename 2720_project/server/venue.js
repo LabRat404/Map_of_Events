@@ -9,7 +9,7 @@ const VenueSchema = Schema({
     // events: [{ type: Schema.Types.ObjectId, ref: 'Venue' }],
     events: [Number],
     comments: [{
-        username: { type: Schema.Types.ObjectId, ref: 'User' },
+        username: String,
         body: String,
         date: Date,
     }]
