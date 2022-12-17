@@ -21,7 +21,6 @@ function App() {
   */
   return (
     <div className="wrapper">
-      <h1>Application</h1>
       <div className="App">
         <Routes>
           <Route exact path="/" element={<Login />} />
