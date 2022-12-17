@@ -23,6 +23,7 @@ function Dashboard(){
   const [clickedFav, setClickedFav] = useState(false);
   const [search, setSearch] = useState("");
   const [realV, updateV] = useState([]);
+  const [clickedLink, updateClickedLink] = useState(false);
 
   //get user name
   useEffect(()=>{
@@ -103,6 +104,10 @@ function Dashboard(){
 
   function showFav(){
     setClickedFav(!clickedFav);
+    updateClickedLink(false);
+  }
+  function backToList(){
+    updateClickedLink(false);
   }
 
   return(
@@ -114,11 +119,16 @@ function Dashboard(){
         </div>
       </header>
 
-
       <div className="mb-3  d-flex flex-row justify-content-center align-items-center">
         <div className="p-2">
+          <Link to ="/Dashboard">
+          <button id="showFavBtn" onClick={()=>backToList()} className="btn btn-primary" type="submit">Back</button>
+          </Link>
+        </div>
+        
+        <div className="p-2">
         <i className="bi bi-search"> <input id = "searchText" onInput={()=> setSearch(document.getElementById("searchText").value)} type="text" placeholder="Search for locations"></input>
-      </i>
+        </i>
          </div>
       
         <div className="p-2">
@@ -131,8 +141,8 @@ function Dashboard(){
 
       {/* middle main content */}
       {/* <Outlet /> */}
-      {!clickedFav && <Tablelist content={search}/> }
-      {clickedFav && <Favourite content={search}/>}
+      {!clickedFav && <Tablelist content={search} clickedLink={clickedLink} updateClickedLink={updateClickedLink}/> }
+      {clickedFav && <Favourite content={search} clickedLink={clickedLink} updateClickedLink={updateClickedLink}/>}
       {/* <Container clickedFav = {clickedFav}/> */}
 
       <footer className="bg-purple">
@@ -159,31 +169,34 @@ function Favourite(props){
     // console.log(sort);
     if(sort){
       return favLists.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
-      <ViewFavList venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<></>);
+      <ViewFavList clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<></>);
     }
     else{
       return favLists.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
-      <ViewFavList venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:< div key={index}></div>);
+      <ViewFavList clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:< div key={index}></div>);
     }
   }
 
   return(
-    <div className="container bg-warning">
-      <div className="row">
-        <div id = "favList" className="col-5 bg-danger border">
+    <div className="container ">
+      <main>
+      <div className="d-flex flex-row row mb-3">
+      {!props.clickedLink &&
+        <div id = "favList" className="border">
           <div className="d-flex justify-content-center align-items-center bg-secondary">
             <div className="p-2"></div>
-            <div className="p-2">Venues</div>
+            <div className="p-2">Favourite Venues</div>
             {/* <div className="p-2"><button onClick={()=>updateSort(!sort)} type="submit" className="btn btn-primary"><i className="bi bi-sort-down"></i></button></div> */}
           </div>
           <div id = "tableList" className="list-group mb-3">
             {sortEvent(sort)}
           </div>
-        </div>
-        <div id = "details" className="col-7 list-group mb-3">
+        </div>}
+        {props.clickedLink && <div id = "details" className=" list-group mb-3">
           <Outlet />
-        </div>
+        </div>}
       </div>
+      </main>
     </div>
   );
 }
@@ -221,25 +234,25 @@ function Tablelist(props){
       if (mod1 ==3){
         venues2.sort((a,b)=>b.quota-a.quota);
         return venues2.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
-      <List venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<div key={index}></div>);
+      <List clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<div key={index}></div>);
       }
 
       if (mod1 == 2){ // low to high
         return venues2.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
-      <List venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<div key={index}></div>);
+      <List clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<div key={index}></div>);
       }
       if (mod1 == 1){
       return venues.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
-      <List venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<div key={index}></div>);}
+      <List clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<div key={index}></div>);}
     
   }
 
   return(
-    <div className="container">
+    <div className="container border">
       <main>
         <div id = "mainContent" className="d-flex flex-row row mb-3">
           
-          <div id = "table" className="col-5 bg-warning">
+          {!props.clickedLink && <div id = "table" className="">
             <div className="d-flex justify-content-between align-items-center bg-secondary">
               <div className="p-2"></div>
               <div className="p-2">Venues</div>
@@ -249,13 +262,13 @@ function Tablelist(props){
             <div id = "tableList" className="list-group mb-3">
               {sortEvent(mod)}
             </div>
-          </div>
+          </div>}
 
-          <div id = "sideContent" className="col-7 bg-success">
+          {props.clickedLink && <div id = "sideContent" className="">
             {/* <SideContent sideVenues = {choosedVenues} sideIndex={venuesIndex}/>
              */}
              <Outlet />
-          </div>
+          </div>}
           
         </div>
       </main>
@@ -285,7 +298,8 @@ function List(props){
   // clicked link
   function handleClick(e){
     // console.log("selected " + name)
-    props.selectedVenues(i, venuesObj); //update parent Tablelist selectedVenues
+    // props.selectedVenues(i, venuesObj); //update parent Tablelist selectedVenues
+    props.updateClickedLink(!props.clickedLink);
   }
 
   //added to favourite
@@ -311,10 +325,12 @@ function List(props){
   return(
     <div className='d-flex flex-row align-items-center'>
       <div className="list-group-item list-group-item-action p-4 border-bottom border-dark">
-        <Link to ={`fav/${name}`} style={{ textDecoration: 'none', color: "black" }}>
-          <div><i className="bi bi-geo-alt"> </i>{name}</div>
-          <div><i className="bi bi-calendar-event"> </i>{quota + " events"}</div>
-        </Link>
+        <div onClick={(e)=>handleClick(e)}>
+          <Link to ={`${name}`} style={{ textDecoration: 'none', color: "black" }}>
+            <div><i className="bi bi-geo-alt"> </i>{name}</div>
+            <div><i className="bi bi-calendar-event"> </i>{quota + " events"}</div>
+          </Link>
+         </div>
       </div>
       {/* fav icon star */}
       <div onClick={()=>addFav()} className='ms-auto p-2'>
@@ -337,7 +353,8 @@ function ViewFavList(props){
   // clicked link
   function handleClick(e){
     // console.log("selected " + name)
-    props.selectedVenues(i, venuesObj); //update parent Tablelist selectedVenues
+    // props.selectedVenues(i, venuesObj); //update parent Tablelist selectedVenues
+    props.updateClickedLink(!props.clickedLink);
   }
 
   //added to favourite
@@ -364,10 +381,12 @@ function ViewFavList(props){
     <div>
     {favorite &&  <div className='d-flex flex-row align-items-center'>
       <div className="list-group-item list-group-item-action p-4 border-bottom border-dark">
-        <Link to ={`fav/${name}`} style={{ textDecoration: 'none', color: "black" }}>
-            <div><i className="bi bi-geo-alt"> </i>{name}</div>
-            <div><i className="bi bi-calendar-event"> </i>{quota + " events"}</div>
-        </Link>
+        <div onClick={(e)=>handleClick(e)}>
+            <Link to ={`${name}`} style={{ textDecoration: 'none', color: "black" }}>
+                <div><i className="bi bi-geo-alt"> </i>{name}</div>
+                <div><i className="bi bi-calendar-event"> </i>{quota + " events"}</div>
+            </Link>
+          </div>
       </div>
       {/* fav icon star */}
       <div onClick={()=>addFav()} className='ms-auto p-2'>
