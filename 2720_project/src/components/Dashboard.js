@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes, useNavigate, Link, Outlet } fro
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { toBeEmpty } from '@testing-library/jest-dom/dist/matchers';
 import fetchEvents from '../hooks/Fetch.js';
+import * as util from './Utilities';
 
 let user;
 let venues = [{ venuesName: "Sha Tin Town Hall (Lecture Room 2)", quota: 36 },
@@ -284,13 +285,13 @@ function SideContent(props) {
           <div class="card">
             <div class="card-header" id="headingOne">
               <h5 class="mb-0">
-                <button class="btn" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <button class="btn" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                 "A Woman Is A Woman"- Fest of Belles and Queens: Actresses European and Hollywood
                 </button>
               </h5>
             </div>
 
-            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion">
               <div class="card-body">
                     'Five years after…And God Created Woman came A Woman Is a Woman. Anna Karina, directed by her future husband, plays a stripper, a text-book case of an object of male gaze. But the joint where she strips is presented by French New Wave genius Jean-Luc Godard with a certain utopic vision, where women who make a living displaying their bodies are not treated with contempt, where the male gaze is cast more as a healthy exercise of vive la difference acknowledging gender attraction than as exploitative power. The director calls the film a neo-realist musical, orchestrating everything with pop-art schemes like cartoons and splashes of primary colors, self-reflexively challenging the fourth wall with the kind of 1960s rebellious spirit that eventually gave rise to Laura Mulvey’s discovery of the male gaze. And Karina looks back at the gaze, literally and figuratively, with sensuousness, intelligence and humor, realizing this playful but also sophisticated masterpiece with her real-life lover, hand-in-hand and eye-to-eye. A Third-Wave feminist film made even before the Second Wave emerged?\n' +
                     '\n' +
@@ -303,12 +304,12 @@ function SideContent(props) {
           <div class="card">
             <div class="card-header" id="headingTwo">
               <h5 class="mb-0">
-                <button class="btn collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                <button class="btn collapsed" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                   Event #2
                 </button>
               </h5>
             </div>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-bs-parent="#accordion">
               <div class="card-body">
                 Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
               </div>
@@ -381,9 +382,7 @@ function SideContent(props) {
           ))}
 
         </div>
-      </div>
-
-      <div class="my-3">
+        
         <form className="form-control" onSubmit={handleSubmit}>
           <div className="row no-gutters">
             <div className="col-10">
@@ -401,7 +400,6 @@ function SideContent(props) {
           </div>
         </form>
       </div>
-
     </div>
   );
 }
