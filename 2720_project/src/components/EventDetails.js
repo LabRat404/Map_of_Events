@@ -15,7 +15,7 @@ function EventDetails(props){
 
     useEffect(() => {
       //use vName find whole venue obj
-      const hostname = "localhost";
+      const hostname = "18.210.46.64";
     let result = fetch("http://" + hostname + ":3001/getAllVenues", {
       method: "GET",
       // crossDomain: true,
