@@ -122,7 +122,7 @@ function Dashboard(){
       {/* middle main content */}
       {/* <Outlet /> */}
       {!clickedFav && <Tablelist content={search}/> }
-      {clickedFav && <Favourite user = {userName}/>}
+      {clickedFav && <Favourite content={search}/>}
       {/* <Container clickedFav = {clickedFav}/> */}
 
       <footer className="bg-purple">
@@ -148,10 +148,12 @@ function Favourite(props){
   function sortEvent(sort){
     // console.log(sort);
     if(sort){
-      return favLists.map((obj,index) => <ViewFavList venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>);
+      return favLists.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
+      <ViewFavList venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<></>);
     }
     else{
-      return favLists.map((obj,index) => <ViewFavList venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>);
+      return favLists.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
+      <ViewFavList venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:< div key={index}></div>);
     }
   }
 
@@ -209,16 +211,16 @@ function Tablelist(props){
       if (mod1 ==3){
         venues2.sort((a,b)=>b.quota-a.quota);
         return venues2.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
-      <List venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<></>);
+      <List venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<div key={index}></div>);
       }
 
       if (mod1 == 2){ // low to high
         return venues2.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
-      <List venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<></>);
+      <List venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<div key={index}></div>);
       }
       if (mod1 == 1){
       return venues.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
-      <List venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<></>);}
+      <List venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<div key={index}></div>);}
     
   }
 
@@ -351,13 +353,12 @@ function ViewFavList(props){
   return(
     <div>
     {favorite &&  <div className='d-flex flex-row align-items-center'>
-      <Link to ={`fav/${name}`} style={{ textDecoration: 'none' }}>
-      {/* <Link to ={`${name}`}> */}
-        <div className="list-group-item list-group-item-action p-4 border-bottom border-dark">
-          <div><i className="bi bi-geo-alt"> </i>{name}</div>
-          <div><i className="bi bi-calendar-event"> </i>{quota + " events"}</div>
-        </div>
-      </Link>
+      <div className="list-group-item list-group-item-action p-4 border-bottom border-dark">
+        <Link to ={`fav/${name}`} style={{ textDecoration: 'none', color: "black" }}>
+            <div><i className="bi bi-geo-alt"> </i>{name}</div>
+            <div><i className="bi bi-calendar-event"> </i>{quota + " events"}</div>
+        </Link>
+      </div>
       {/* fav icon star */}
       <div onClick={()=>addFav()} className='ms-auto p-2'>
         <div className='btn'>
