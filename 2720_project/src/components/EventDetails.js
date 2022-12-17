@@ -135,7 +135,7 @@ function EventDetails(props){
                     <div class="row">
                       <div class="d-flex mb-1">
                         <p class="fw-bold m-0">user1</p>
-                        <p class="m-0 ms-1"> on 17 Dec 2022 </p>
+                        <p class="m-0 ms-1"> on December 17, 2022 </p>
                       </div>
                       <div class="d-flex">
                         <p class="m-0">{comment}</p>

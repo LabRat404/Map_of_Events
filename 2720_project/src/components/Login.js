@@ -10,7 +10,7 @@ function Login (props) {
   const handleSubmit = (e) => {
 
     e.preventDefault();
-    fetch("http://localhost:3001/login-user", {
+    fetch("http://18.210.46.64:3001/login-user", {
       method: "POST",
       redirect: 'follow',
       crossDomain: true,

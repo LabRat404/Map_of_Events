@@ -4,7 +4,7 @@ import React, { Component, useState, useEffect } from "react";
 export default function Preferences() {
  const [data1, setdata1] = useState([{"username": "loading"}]);
  const [click, setclick] = useState(false);
- const hostname = "localhost";
+ const hostname = "18.210.46.64";
   function addUser(){
     fetch("http://"+hostname+":3001/addUsers", {
       method: "POST",
