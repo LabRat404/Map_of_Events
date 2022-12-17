@@ -20,20 +20,16 @@ function App() {
   }
   */
   return (
-    <div className="wrapper">
-      <h1>Application</h1>
+    <div >
+      {/* <h1 className="text-center p-2">Welcome to Map of Events!</h1> */}
       <div className="App">
-        <div className="auth-wrapper">
-          <div className="auth-inner">
-            <Routes>
-              <Route exact path="/" element={<Login />} />
-              <Route path="/Dashboard" element={<Dashboard />}>
-                <Route path="fav/:vName" element={<EventDetails />}/>
-              </Route>
-              <Route path="/Preference" element={<Preferences />} />
-            </Routes>
-          </div>
-        </div>
+        <Routes>
+          <Route exact path="/" element={<Login />} />
+          <Route path="/Dashboard" element={<Dashboard />}>
+            <Route path="fav/:vName" element={<EventDetails />}/>
+          </Route>
+          <Route path="/Preference" element={<Preferences />} />
+        </Routes>
       </div>
     </div>
   );
