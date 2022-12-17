@@ -85,7 +85,7 @@ async function fetchEvents(start, end) {
 
 async function updateVenues(venues) {
     venues.forEach((item) => {
-        fetch('http://localhost:3001/updateVenue', {
+        fetch('http://18.210.46.64:3001/updateVenue', {
             method: "PUT",
             headers: {
                 "Content-Type": 'application/json',
@@ -106,7 +106,7 @@ async function updateVenues(venues) {
  */
 async function updateEvents(events) {
     events.forEach((item) => {
-        fetch('http://localhost:3001/updateEvent', {
+        fetch('http://18.210.46.64:3001/updateEvent', {
             method: "PUT",
             headers: {
                 "Content-Type": 'application/json',

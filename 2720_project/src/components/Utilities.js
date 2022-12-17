@@ -1,5 +1,5 @@
 export async function getAllVenues() {
-    return await fetch('http://localhost:3001/getAllVenues', {
+    return await fetch('http://18.210.46.64:3001/getAllVenues', {
         method: "GET",
         headers: {
             "Content-Type": 'application/json',
@@ -13,7 +13,7 @@ export async function getAllVenues() {
 }
 
 export async function getEvent(id) {
-    return await fetch('http://localhost:3001/getEvent', {
+    return await fetch('http://18.210.46.64:3001/getEvent', {
         method: "POST",
         headers: {
             "Content-Type": 'application/json',
@@ -27,7 +27,7 @@ export async function getEvent(id) {
 }
 
 export async function getCommentList(id) {
-    return await fetch('http://localhost:3001/getComments', {
+    return await fetch('http://18.210.46.64:3001/getComments', {
         method: "POST",
         headers: {
             "Content-Type": 'application/json',
@@ -41,7 +41,7 @@ export async function getCommentList(id) {
 }
 
 export async function updateComment(id, comment) {
-    return await fetch('http://localhost:3001/updateComment', {
+    return await fetch('http://18.210.46.64:3001/updateComment', {
         method: "PUT",
         headers: {
             "Content-Type": 'application/json',
