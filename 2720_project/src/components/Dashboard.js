@@ -6,20 +6,15 @@ import fetchAllData from '../hooks/Fetch.js'
 import * as API from './Utilities.js'
 
 let user;
-let venues = [];
-// [{ venuesName: "Sha Tin Town Hall (Lecture Room 2)", quota: 36 },
-// { venuesName: "Sha Tin Town Hall (Conference Room)", quota: 40 },
-// { venuesName: "Sha Tin Town Hall (Lecture Room 1)", quota: 32 },
-// { venuesName: "Sheung Wan Civic Centre (Lecture Hall)", quota: 26 },
-// { venuesName: "Hong Kong Central Library", quota: 29 },
-// { venuesName: "Sha Tin Town Hall (Dance Studio)", quota: 28 },
-// { venuesName: "Tuen Mun Town Hall (Dance Studio)", quota: 25 },
-// { venuesName: "Yuen Long Theatre (Dance Studio)", quota: 20 },
-// { venuesName: "North District Town Hall (Function Room 1)", quota: 19 },
-// { venuesName: "Sha Tin Town Hall (Music Studio)", quota: 34 }
-// ];
+let venues = [{
+  venueid: "0",
+  venuee: "Loading",
+  latitude: "0",
+  longitude: "0",
+  events: []
+}];
 let sortedVenues = [];
-let favLists = [];
+let favLists = venues;
 const hostname = "18.210.46.64";
 
 function Dashboard() {
@@ -58,7 +53,9 @@ function Dashboard() {
     let decodedToken = parseJwt(token);
     // console.log(decodedToken);
     setUserName(decodedToken.username);
-    user = userName;
+    let user = userName;
+    window.sessionStorage.setItem('uname', user);
+    
     // console.log(user);
     // window.localStorage.removeItem('user2');
     if (userName != undefined) {
@@ -85,7 +82,8 @@ function Dashboard() {
       .then((res) => {
         setVenuList(res);
         venues = res;
-        window.sessionStorage.setItem("venueList", res);
+        console.log(res)
+        window.sessionStorage.setItem("venueList", JSON.stringify(res));
       })
   }, []);
 
@@ -263,7 +261,6 @@ function Tablelist(props) {
               {sortEvent(mod)}
             </div>
           </div>}
-
           {props.clickedLink && <div id="sideContent" className="">
             <Outlet />
           </div>}
@@ -279,6 +276,7 @@ function List(props) {
   let i = props.i; //index
   let venuesObj = props.venuesObj;
   let name = props.venuesObj.venuee;
+  let venueid = props.venuesObj.venueid;
   let quota = props.venuesObj.events.length;
   // console.log(name);
 
@@ -313,7 +311,7 @@ function List(props) {
     <div className='d-flex flex-row align-items-center'>
       <div className="list-group-item list-group-item-action p-4 border-bottom border-dark">
         <div onClick={(e) => handleClick(e)}>
-          <Link to={`${name}`} style={{ textDecoration: 'none', color: "black" }}>
+          <Link to={`${venueid}`} style={{ textDecoration: 'none', color: "black" }}>
             <div><i className="bi bi-geo-alt"> </i>{name}</div>
             <div><i className="bi bi-calendar-event"> </i>{quota + " events"}</div>
           </Link>
@@ -334,6 +332,7 @@ function ViewFavList(props) {
   let i = props.i; //index
   let venuesObj = props.venuesObj;
   let name = props.venuesObj.venuee;
+  let venueid = props.venuesObj.venueid;
   let quota = props.venuesObj.events.length;
   // console.log(name);
 
@@ -369,7 +368,7 @@ function ViewFavList(props) {
       {favorite && <div className='d-flex flex-row align-items-center'>
         <div className="list-group-item list-group-item-action p-4 border-bottom border-dark">
           <div onClick={(e) => handleClick(e)}>
-            <Link to={`${name}`} style={{ textDecoration: 'none', color: "black" }}>
+            <Link to={`${venueid}`} style={{ textDecoration: 'none', color: "black" }}>
               <div><i className="bi bi-geo-alt"> </i>{name}</div>
               <div><i className="bi bi-calendar-event"> </i>{quota + " events"}</div>
             </Link>

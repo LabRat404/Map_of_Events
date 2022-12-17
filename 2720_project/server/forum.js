@@ -6,7 +6,7 @@ const ForumSchema = Schema({
     comments: [{
         username: String,
         body: String,
-        date: Date,
+        date: String,
     }]
 });
 
@@ -47,7 +47,7 @@ module.exports.update = async function (req, res) {
             forum.save();
         } else {
             forum.comments.push(...e.comments)
-            venue.save();
+            forum.save();
         }
     } catch (e) {
         return res.json({ err: e });

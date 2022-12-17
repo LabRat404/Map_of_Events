@@ -31,14 +31,19 @@ export async function getCommentList(id) {
 }
 
 export async function updateComment(id, comment) {
-    return await fetch('http://18.210.46.64:3001/updateComment', {
+    console.log(id, comment)
+    return await fetch('http://localhost:3001/updateComment', {
         method: "PUT",
         headers: {
             "Content-Type": 'application/json',
         },
         body: JSON.stringify({
             venueid: id,
-            comments: [comment],
+            comments: [{
+                username: comment.username,
+                body: comment.body,
+                date: comment.date,
+            }],
         })
     })
         .then((res) => res.json())
