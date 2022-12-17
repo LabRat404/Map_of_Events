@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  background-image: url(map.jpeg);
+  background-image: url(../public/map.jpeg);
 }
 
 .App-logo {
