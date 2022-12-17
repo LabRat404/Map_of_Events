@@ -5,6 +5,7 @@ import Dashboard from './components/Dashboard';
 import Preferences from './components/Preference';
 import Login from './components/Login';
 import EventDetails from './components/EventDetails';
+import DefaultPage from './components/DefaultPage';
 
 function App() {
   /** 
@@ -28,7 +29,9 @@ function App() {
             <Routes>
               <Route exact path="/" element={<Login />} />
               <Route path="/Dashboard" element={<Dashboard />}>
-                <Route path="fav/:vName" element={<EventDetails />}/>
+                {/* <Route index element={<DefaultPage />}/>
+                <Route path="fav" element={<EventDetails />}/> */}
+                <Route path=":vName" element={<EventDetails />}/>
               </Route>
               <Route path="/Preference" element={<Preferences />} />
             </Routes>
