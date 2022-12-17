@@ -22,6 +22,8 @@ function Dashboard(){
   const [userName, setUserName] = useState();
   const [clickedFav, setClickedFav] = useState(false);
   const [search, setSearch] = useState("");
+  const [realV, updateV] = useState([]);
+
   //get user name
   useEffect(()=>{
     const parseJwt = (token) => {
@@ -33,9 +35,9 @@ function Dashboard(){
     };
 
     let token = window.localStorage.getItem('token');
-    console.log(token);
+    // console.log(token);
     let decodedToken = parseJwt(token);
-    console.log(decodedToken);
+    // console.log(decodedToken);
     setUserName(decodedToken.username);
     user = userName;
     // console.log(user);
@@ -43,7 +45,7 @@ function Dashboard(){
     if(userName != undefined){
       let userFavList = window.localStorage.getItem(userName);
       if(userFavList == null){ //no such user
-        console.log("new user, empty fav list");
+        // console.log("new user, empty fav list");
         window.localStorage.setItem(userName, JSON.stringify([]));
         // window.localStorage.removeItem('testuser');
         // console.log(favLists);
@@ -52,14 +54,40 @@ function Dashboard(){
         favLists = JSON.parse(userFavList);
         // console.log(favLists.length);
         // console.log(favLists);
-        console.log("old user, hv list");
+        // console.log("old user, hv list");
       }
     }
-  });
+    fetchData();
+  }, [userName,realV]);
+
+  function fetchData(){
+    const hostname = "localhost";
+    fetch("http://"+hostname+":3001/getAllVenues", {
+      method: "GET",
+      // crossDomain: true,
+      headers: {
+        "Content-Type": "application/json",
+        // Accept: "application/json",
+        // "Access-Control-Allow-Origin": "*",
+      }
+    }).then(res => res.json())
+    .then(
+      realVenues =>{
+        // updateV(realVenues); //save to state
+        // console.log(realVenues);
+        for(let i  = 0 ;i < 10;i++){
+          venues[i].venuesName = realVenues[i].venuee;
+          venues[i].quota = realVenues[i].events.length;
+        }
+        // console.log(venues);
+      }
+    );
+  }
 
 
   function logout(){
-    localStorage.clear();
+    localStorage.removeItem("admin");
+    localStorage.removeItem("token");
     window.location.href = '/';
   }
 
