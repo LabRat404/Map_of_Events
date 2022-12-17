@@ -20,8 +20,8 @@ function App() {
   }
   */
   return (
-    <div >
-      {/* <h1 className="text-center p-2">Welcome to Map of Events!</h1> */}
+    <div className="wrapper">
+      <h1>Application</h1>
       <div className="App">
         <Routes>
           <Route exact path="/" element={<Login />} />

@@ -57,6 +57,16 @@ function Dashboard(){
         // console.log("old user, hv list");
       }
     }
+    let currentTime = new Date();
+    let str = "";
+    str += currentTime.toLocaleDateString();
+    str += " ";
+    str += currentTime.getHours() + ":";
+    str += currentTime.getMinutes() + ":";
+    str += currentTime.getSeconds();
+    // console.log(currentTime.toLocaleDateString());
+    document.getElementById("lastUpdatedTime").innerText = str;
+
     fetchData();
   }, [userName,realV]);
 
@@ -126,7 +136,7 @@ function Dashboard(){
       {/* <Container clickedFav = {clickedFav}/> */}
 
       <footer className="bg-purple">
-        <i className="bi bi-clock"> </i>Last updated on <span id = "lastUpdatedTime">2022-12-14</span>.
+        <i className="bi bi-clock"> </i>Last updated on <span id = "lastUpdatedTime">2022-12-17 14:00</span>
       </footer>
     </>
   );
