@@ -140,7 +140,9 @@ export default function Preferences() {
           <br></br>
           <input value="New Username"></input>
           <input value="New Password"></input>
-          <p>-------------------------------------------User Records-------------------------------------------</p>
+          <br></br>
+          <br></br>
+          <p>------User Records------</p>
 
         {data1.map((_,index) => 
    <>
@@ -161,7 +163,7 @@ export default function Preferences() {
          
         
         )}
-           <p>-------------------------------------------Add new User-------------------------------------------</p>
+           <p>------Add new User------</p>
 
           <input placeholder="Username" id="uname"></input>
           <input placeholder="Password" id="pw"></input>

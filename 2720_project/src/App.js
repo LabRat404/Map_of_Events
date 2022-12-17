@@ -22,15 +22,12 @@ function App() {
   */
   return (
     <div className="wrapper">
-      <h1>Application</h1>
       <div className="App">
         <div className="auth-wrapper">
           <div className="auth-inner">
             <Routes>
               <Route exact path="/" element={<Login />} />
               <Route path="/Dashboard" element={<Dashboard />}>
-                {/* <Route index element={<DefaultPage />}/>
-                <Route path="fav" element={<EventDetails />}/> */}
                 <Route path=":vName" element={<EventDetails />}/>
               </Route>
               <Route path="/Preference" element={<Preferences />} />
