@@ -156,6 +156,7 @@ function Favourite(props){
   const [sort, updateSort] = useState(false);
   const [choosedVenues, updateChoosedVenues] = useState(venues[0]); // selected venues from list, default = 1st venue
   const [venuesIndex, updateVenuesIndex] = useState(0); // selected venues index from list
+  const [mod2, setmod2] = useState(1)
 
   //function pass to child to update selected venues
   function selectedVenues(index, v){ 
@@ -165,15 +166,23 @@ function Favourite(props){
   }
 
 
-  function sortEvent(sort){
+  function sortEvent(mod1){
     // console.log(sort);
-    if(sort){
-      return favLists.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
+    let list2= JSON.parse(JSON.stringify(favLists)); 
+      list2.sort((a,b)=>a.quota-b.quota);
+
+    if(mod1==2){
+      return list2.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
       <ViewFavList clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<></>);
     }
-    else{
+    else if(mod1==1){
       return favLists.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
       <ViewFavList clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:< div key={index}></div>);
+    }
+    else if (mod1==3){
+      list2.sort((a,b)=>b.quota-a.quota);
+      return list2.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
+      <ViewFavList clickedLink={props.clickedLink} updateClickedLink={props.updateClickedLink} venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<></>)
     }
   }
 
@@ -186,10 +195,10 @@ function Favourite(props){
           <div className="d-flex justify-content-center align-items-center bg-secondary">
             <div className="p-2"></div>
             <div className="p-2">Favourite Venues</div>
-            {/* <div className="p-2"><button onClick={()=>updateSort(!sort)} type="submit" className="btn btn-primary"><i className="bi bi-sort-down"></i></button></div> */}
+            <div className="p-2"><button onClick={()=>setmod2(mod2 ==3? 1:mod2+1)} type="submit" className="btn btn-primary"><i className="bi bi-sort-down"></i></button></div>
           </div>
           <div id = "tableList" className="list-group mb-3">
-            {sortEvent(sort)}
+            {sortEvent(mod2)}
           </div>
         </div>}
         {props.clickedLink && <div id = "details" className=" list-group mb-3">
