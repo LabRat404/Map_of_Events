@@ -143,9 +143,10 @@ function Dashboard(){
 }
 
 function Favourite(props){
-  const [sort, updateSort] = useState(false);
+  // const [sort, updateSort] = useState(false);
   const [choosedVenues, updateChoosedVenues] = useState(venues[0]); // selected venues from list, default = 1st venue
   const [venuesIndex, updateVenuesIndex] = useState(0); // selected venues index from list
+  const [mod2, setmod2]= useState(1);
 
   //function pass to child to update selected venues
   function selectedVenues(index, v){ 
@@ -154,15 +155,24 @@ function Favourite(props){
     updateChoosedVenues(v);
   }
 
+  
 
-  function sortEvent(sort){
+  function sortEvent(mod1){
     // console.log(sort);
-    if(sort){
+    let newlist = JSON.parse(JSON.stringify(favLists));
+    if (mod1==1){
       return favLists.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
-      <ViewFavList venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:<></>);
+      <ViewFavList venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:< div key={index}></div>);
     }
-    else{
-      return favLists.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
+
+    else if (mod1==2){
+      newlist.sort((a,b)=>a.quota-b.quota);
+      return newlist.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
+      <ViewFavList venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:< div key={index}></div>);
+    }
+    else if(mod1==3){
+      newlist.sort((a,b)=>b.quota-a.quota);
+      return newlist.map((obj,index) => obj.venuesName.toLowerCase().includes(props.content.toLowerCase())?
       <ViewFavList venuesObj={obj} i = {index} key={index} selectedVenues = {selectedVenues}/>:< div key={index}></div>);
     }
   }
@@ -174,10 +184,11 @@ function Favourite(props){
           <div className="d-flex justify-content-center align-items-center bg-secondary">
             <div className="p-2"></div>
             <div className="p-2">Venues</div>
-            {/* <div className="p-2"><button onClick={()=>updateSort(!sort)} type="submit" className="btn btn-primary"><i className="bi bi-sort-down"></i></button></div> */}
+            <div className="p-2"><button onClick={()=>{setmod2(mod2==3? 1:mod2+1)}} type="submit" className="btn btn-primary"><i className="bi bi-sort-down"></i></button></div>
+           {/* updateSort(!sort);  */}
           </div>
           <div id = "tableList" className="list-group mb-3">
-            {sortEvent(sort)}
+            {sortEvent(mod2)}
           </div>
         </div>
         <div id = "details" className="col-7 list-group mb-3">

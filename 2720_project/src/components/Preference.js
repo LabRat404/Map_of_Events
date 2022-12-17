@@ -6,6 +6,7 @@ export default function Preferences() {
  const [click, setclick] = useState(false);
  const hostname = "localhost";
   function addUser(){
+   
     fetch("http://"+hostname+":3001/addUsers", {
       method: "POST",
       //mode: "no-cors",
