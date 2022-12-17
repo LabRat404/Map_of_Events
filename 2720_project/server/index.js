@@ -20,6 +20,7 @@ mongoose
     require("./user");
     const event = require("./event");
     const venue = require("./venue");
+    const forum = require("./forum");
     const cors = require('cors');
 
     app.use(cors({
@@ -145,6 +146,18 @@ mongoose
 
     app.put("/updateVenue", async (req, res) => {
       return venue.update(req, res);
+    })
+
+    app.post("/getComments", async (req, res) => {
+      return forum.find(req, res);
+    })
+
+    app.post("/addComment", async (req, res) => {
+      return forum.create(req, res);
+    })
+
+    app.put("/updateComment", async (req, res) => {
+      return forum.update(req, res);
     })
 
     app.listen(3001, () => {
