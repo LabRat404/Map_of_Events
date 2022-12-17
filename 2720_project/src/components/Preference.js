@@ -69,7 +69,8 @@ export default function Preferences() {
     .then((res) => res.json())
     .then((data) => {
       
-        console.log(data);
+
+
       
     });
   
@@ -103,7 +104,7 @@ export default function Preferences() {
         document.getElementById(data1[i].username+"p").style.backgroundColor = "#CCCCCC";
       }
       for(let i = 0; i<data1.length; i++){
-        console.log(document.getElementById(data1[i].username+"username").value);
+  
         if( document.getElementById(data1[i].username+"username").value !="" && document.getElementById(data1[i].username+"pw").value !=""){
           
           document.getElementById(data1[i].username+"up").classList.remove('disabled');
