@@ -32,7 +32,7 @@ export async function getCommentList(id) {
 
 export async function updateComment(id, comment) {
     console.log(id, comment)
-    return await fetch('http://localhost:3001/updateComment', {
+    return await fetch('http://18.210.46.64:3001/updateComment', {
         method: "PUT",
         headers: {
             "Content-Type": 'application/json',
