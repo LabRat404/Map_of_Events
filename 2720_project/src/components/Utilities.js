@@ -3,13 +3,9 @@ export async function getAllVenues() {
         method: "GET",
         headers: {
             "Content-Type": 'application/json',
-        },
-        body: JSON.stringify({ eventid: 141097 })
+        }
     })
         .then((res) => res.json())
-        .then((obj) => {
-            console.log(obj);
-        })
 }
 
 export async function getEvent(id) {
@@ -21,9 +17,6 @@ export async function getEvent(id) {
         body: JSON.stringify({ eventid: id })
     })
         .then((res) => res.json())
-        .then((obj) => {
-            console.log(obj);
-        })
 }
 
 export async function getCommentList(id) {
@@ -35,12 +28,10 @@ export async function getCommentList(id) {
         body: JSON.stringify({ venueid: id })
     })
         .then((res) => res.json())
-        .then((obj) => {
-            console.log(obj);
-        })
 }
 
 export async function updateComment(id, comment) {
+    console.log(id, comment)
     return await fetch('http://18.210.46.64:3001/updateComment', {
         method: "PUT",
         headers: {
@@ -48,12 +39,12 @@ export async function updateComment(id, comment) {
         },
         body: JSON.stringify({
             venueid: id,
-            comments: [comment],
+            comments: [{
+                username: comment.username,
+                body: comment.body,
+                date: comment.date,
+            }],
         })
     })
         .then((res) => res.json())
-        .then((obj) => {
-            if (obj.err)
-                console.log(obj.err);
-        })
 }
